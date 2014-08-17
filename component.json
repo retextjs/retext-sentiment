@@ -1,0 +1,30 @@
+{
+  "name": "retext-sentiment",
+  "version": "0.0.1",
+  "description": "Detect the sentiment of text with Retext",
+  "keywords": [
+    "natural",
+    "language",
+    "afinn",
+    "sentiment",
+    "subjective",
+    "subjectivity",
+    "polarity",
+    "opinion",
+    "emotion",
+    "attitude",
+    "sentiment",
+    "detect",
+    "guess",
+    "retext"
+  ],
+  "license": "MIT",
+  "repository": "wooorm/retext-sentiment",
+  "dependencies": {
+    "wooorm/retext-visit": "^0.1.0",
+    "wooorm/afinn-111": "~0.0.1"
+  },
+  "scripts": [
+    "index.js"
+  ]
+}
