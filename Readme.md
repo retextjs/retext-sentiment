@@ -68,10 +68,10 @@ tree.visitType(tree.WORD_NODE, function (wordNode) {
 The example also uses [retext-visit](https://github.com/wooorm/retext-visit).
 
 ## Supported Words
-**retext-sentiment** supports all words [wooorm/polarity](https://github.com/wooorm/polarity#supported-words) supports (AFINN-111).
+**retext-sentiment** supports all words [wooorm/afinn-111](https://github.com/wooorm/afinn-111#supported-words) supports.
 
 ## API
-None, the plugin automatically detects the sentiment of each word (using [wooorm/polarity](https://github.com/wooorm/polarity)) when it’s created or changed, and stores the valence in `word.data.valence`, and polarity in `word.data.polarity`.
+None, the plugin automatically detects the sentiment of each word (using [wooorm/afinn-111](https://github.com/wooorm/afinn-111)) when it’s created or changed, and stores the valence in `word.data.valence`, and polarity in `word.data.polarity`.
 
 In addition, the plugin exposes the average of the detected sentiment on sentences, paragraphs, and root nodes, through the same `valence` and `polarity` properties.
 
