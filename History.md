@@ -1,5 +1,5 @@
 
-n.n.n / 2014-09-08
+0.1.0 / 2014-09-08
 ==================
 
  * Add bower_components to .gitignore
