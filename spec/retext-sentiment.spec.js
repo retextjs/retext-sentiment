@@ -178,9 +178,7 @@ describe('sentiment()', function () {
             tree.visitType(tree.WORD_NODE, function (wordNode) {
                 iterator++;
 
-                wordNode.append(
-                    new wordNode.TextOM.TextNode(otherWords[iterator])
-                );
+                wordNode.replaceContent(otherWords[iterator]);
 
                 assert(wordNode.data.valence === otherValences[iterator]);
                 assert(wordNode.data.polarity === otherPolarities[iterator]);
