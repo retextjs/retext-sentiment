@@ -1,8 +1,15 @@
-language: "node_js"
+language: node_js
 before_install:
-  - "npm update -g npm"
-script: "npm run-script test-travis"
+- npm update -g npm
+script: npm run-script test-travis
 node_js:
-  - "0.10"
-  - "0.11"
-after_script: "npm install coveralls@2.10.0 && cat ./coverage/lcov.info | coveralls"
+- '0.10'
+- '0.11'
+after_script: npm install coveralls@2.10.0 && cat ./coverage/lcov.info | coveralls
+deploy:
+  provider: npm
+  email: tituswormer@gmail.com
+  api_key:
+    secure: l9tNf27N2iNbRQYfwDY2RNnfg8S6b3JYJARs9ohtvqiGUYWS4Fw44N/x33+mzYR6yVI9XzjrDgdHwc/Z6Liv6ygZ7Y9iW4sOdaXwNYOLCtAHtbMEDjZnCzlKMPmy4JxL+mEK9Va/OOY4FKaqTwZDI9Kmp8CRKB7qGwp31RMu46I=
+  on:
+    repo: wooorm/retext-sentiment
