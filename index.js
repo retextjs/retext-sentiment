@@ -84,8 +84,6 @@ function plugin(tree) {
     });
 }
 
-exports = module.exports = plugin;
-
 function attach(retext) {
     var TextOM = retext.parser.TextOM;
 
@@ -97,5 +95,7 @@ function attach(retext) {
     TextOM.Node.on('remove', onremove);
     TextOM.Node.on('insert', oninsert);
 }
+
+exports = module.exports = plugin;
 
 exports.attach = attach;
