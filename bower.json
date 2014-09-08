@@ -1,0 +1,44 @@
+{
+  "name": "retext-sentiment",
+  "description": "Detect the sentiment of text with Retext",
+  "authors": [
+    "Titus Wormer <tituswormer@gmail.com>"
+  ],
+  "keywords": [
+    "natural",
+    "language",
+    "afinn",
+    "sentiment",
+    "subjective",
+    "subjectivity",
+    "polarity",
+    "opinion",
+    "emotion",
+    "attitude",
+    "sentiment",
+    "detect",
+    "guess",
+    "retext"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wooorm/retext-sentiment.git"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "retext-visit": "^0.1.0",
+    "afinn-111": "^0.1.0"
+  },
+  "main": "index.js",
+  "ignore": [
+    ".*",
+    "*.log",
+    "*.md",
+    "component.json",
+    "package.json",
+    "coverage",
+    "node_modules",
+    "benchmark",
+    "spec"
+  ]
+}
