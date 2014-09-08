@@ -21,18 +21,18 @@
   "license": "MIT",
   "author": "Titus Wormer <tituswormer@gmail.com>",
   "dependencies": {
-    "afinn-111": "0.1.0",
+    "afinn-111": "^0.1.0",
     "retext-visit": "^0.1.0"
   },
   "peerDependencies": {
-    "retext": "^0.1.0-rc.4"
+    "retext": "^0.1.0"
   },
   "devDependencies": {
     "eslint": "^0.8.0",
     "istanbul": "^0.3.0",
     "jscs": "^1.5.9",
     "mocha": "^1.21.0",
-    "retext": "^0.1.0-rc.4",
+    "retext": "^0.1.0",
     "retext-content": "^0.2.0"
   },
   "repository": {
