@@ -2,6 +2,7 @@
   "name": "retext-sentiment",
   "version": "0.1.0",
   "description": "Detect the sentiment of text with Retext",
+  "license": "MIT",
   "keywords": [
     "natural",
     "language",
@@ -18,12 +19,15 @@
     "guess",
     "retext"
   ],
-  "license": "MIT",
-  "author": "Titus Wormer <tituswormer@gmail.com>",
   "dependencies": {
     "afinn-111": "^0.1.0",
     "retext-visit": "^0.1.1"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wooorm/retext-sentiment.git"
+  },
+  "author": "Titus Wormer <tituswormer@gmail.com>",
   "devDependencies": {
     "eslint": "^0.8.0",
     "istanbul": "^0.3.0",
@@ -31,10 +35,6 @@
     "mocha": "^1.21.0",
     "retext": "^0.2.0-rc.2",
     "retext-content": "^0.2.2"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/wooorm/retext-sentiment.git"
   },
   "scripts": {
     "test": "node_modules/.bin/_mocha --reporter spec --check-leaks -u exports spec/retext-sentiment.spec.js",

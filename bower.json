@@ -1,9 +1,8 @@
 {
   "name": "retext-sentiment",
+  "main": "index.js",
   "description": "Detect the sentiment of text with Retext",
-  "authors": [
-    "Titus Wormer <tituswormer@gmail.com>"
-  ],
+  "license": "MIT",
   "keywords": [
     "natural",
     "language",
@@ -20,16 +19,17 @@
     "guess",
     "retext"
   ],
+  "dependencies": {
+    "afinn-111": "^0.1.0",
+    "retext-visit": "^0.1.1"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/wooorm/retext-sentiment.git"
   },
-  "license": "MIT",
-  "dependencies": {
-    "retext-visit": "^0.1.0",
-    "afinn-111": "^0.1.0"
-  },
-  "main": "index.js",
+  "authors": [
+    "Titus Wormer <tituswormer@gmail.com>"
+  ],
   "ignore": [
     ".*",
     "*.log",
