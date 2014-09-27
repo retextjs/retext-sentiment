@@ -22,18 +22,15 @@
   "author": "Titus Wormer <tituswormer@gmail.com>",
   "dependencies": {
     "afinn-111": "^0.1.0",
-    "retext-visit": "^0.1.0"
-  },
-  "peerDependencies": {
-    "retext": "^0.1.0"
+    "retext-visit": "^0.1.1"
   },
   "devDependencies": {
     "eslint": "^0.8.0",
     "istanbul": "^0.3.0",
-    "jscs": "^1.5.9",
+    "jscs": "^1.6.0",
     "mocha": "^1.21.0",
-    "retext": "^0.1.0",
-    "retext-content": "^0.2.0"
+    "retext": "^0.2.0-rc.2",
+    "retext-content": "^0.2.2"
   },
   "repository": {
     "type": "git",
