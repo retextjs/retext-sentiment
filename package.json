@@ -43,8 +43,6 @@
     "lint-api": "node_modules/.bin/eslint index.js --env node --env browser --rule 'quotes: [2, single]'",
     "lint-test": "node_modules/.bin/eslint spec/retext-sentiment.spec.js --env node --env mocha --rule 'quotes: [2, single]'",
     "lint-style": "node_modules/.bin/jscs index.js spec/retext-sentiment.spec.js --reporter=inline",
-    "install-browser-test": "npm install browserify",
-    "build-browser-test": "node_modules/.bin/browserify spec/retext-sentiment.spec.js -o spec/browser.spec.js",
     "coverage": "node_modules/.bin/istanbul cover node_modules/.bin/_mocha -- -- spec/retext-sentiment.spec.js",
     "make": "npm run lint && npm run coverage"
   }
