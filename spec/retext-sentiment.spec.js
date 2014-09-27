@@ -1,13 +1,14 @@
 'use strict';
 
-var sentiment, content, visit, Retext, assert, tree,
-    otherWords,
-    valences, polarities,
-    sentenceValences, sentencePolarities,
-    paragraphValences, paragraphPolarities,
-    otherValences, otherPolarities,
-    otherSentenceValences, otherSentencePolarities,
-    otherParagraphValences, otherParagraphPolarities;
+var sentiment,
+    content,
+    visit,
+    Retext,
+    assert;
+
+/**
+ * Dependencies.
+ */
 
 sentiment = require('..');
 content = require('retext-content');
@@ -15,17 +16,42 @@ Retext = require('retext');
 visit = require('retext-visit');
 assert = require('assert');
 
-tree = new Retext()
+/**
+ * Retext.
+ */
+
+var retext;
+
+retext = new Retext()
     .use(content)
     .use(visit)
-    .use(sentiment)
-    .parse(
-        'Some positive, happy, cats. ' +
-        'Darn self-deluded, abandoned, dogs.\n' +
-        'Home Sweet Home Chicago! ' +
-        'Feels good to be back. ' +
-        'Bad news though.'
-    );
+    .use(sentiment);
+
+/**
+ * Fixtures
+ */
+
+var document,
+    otherWords,
+    valences,
+    polarities,
+    sentenceValences,
+    sentencePolarities,
+    paragraphValences,
+    paragraphPolarities,
+    otherValences,
+    otherPolarities,
+    otherSentenceValences,
+    otherSentencePolarities,
+    otherParagraphValences,
+    otherParagraphPolarities;
+
+document =
+    'Some positive, happy, cats. ' +
+    'Darn self-deluded, abandoned, dogs.\n' +
+    'Home Sweet Home Chicago! ' +
+    'Feels good to be back. ' +
+    'Bad news though.';
 
 valences = [
     'neutral', 'positive', 'positive', 'neutral',
@@ -47,8 +73,11 @@ sentenceValences = [
     'positive', 'negative',
     'positive', 'positive', 'negative'
 ];
+
 sentencePolarities = [5, -4, 2, 3, -3];
+
 paragraphValences = ['positive', 'positive'];
+
 paragraphPolarities = [1, 2];
 
 otherWords = [
@@ -85,48 +114,62 @@ otherParagraphValences = ['negative', 'negative'];
 
 otherParagraphPolarities = [-5, -6];
 
+/**
+ * Tests.
+ */
+
 describe('sentiment()', function () {
-    it('should be of type `function`', function () {
+    var tree;
+
+    before(function (done) {
+        retext.parse(document, function (err, node) {
+            tree = node;
+
+            done(err);
+        });
+    });
+
+    it('should be a `function`', function () {
         assert(typeof sentiment === 'function');
     });
 
     it('should process each `WordNode`', function () {
-        var iterator = -1;
+        var index = -1;
 
         tree.visitType(tree.WORD_NODE, function (wordNode) {
-            iterator++;
+            index++;
 
-            assert(wordNode.data.valence === valences[iterator]);
-            assert(wordNode.data.polarity === polarities[iterator]);
+            assert(wordNode.data.valence === valences[index]);
+            assert(wordNode.data.polarity === polarities[index]);
         });
     });
 
     it('should process each `SentenceNode`', function () {
-        var iterator = -1;
+        var index = -1;
 
         tree.visitType(tree.SENTENCE_NODE, function (sentenceNode) {
-            iterator++;
+            index++;
 
             assert(
-                sentenceNode.data.valence === sentenceValences[iterator]
+                sentenceNode.data.valence === sentenceValences[index]
             );
             assert(
-                sentenceNode.data.polarity === sentencePolarities[iterator]
+                sentenceNode.data.polarity === sentencePolarities[index]
             );
         });
     });
 
     it('should process each `ParagraphNode`', function () {
-        var iterator = -1;
+        var index = -1;
 
         tree.visitType(tree.PARAGRAPH_NODE, function (paragraphNode) {
-            iterator++;
+            index++;
 
             assert(
-                paragraphNode.data.valence === paragraphValences[iterator]
+                paragraphNode.data.valence === paragraphValences[index]
             );
             assert(
-                paragraphNode.data.polarity === paragraphPolarities[iterator]
+                paragraphNode.data.polarity === paragraphPolarities[index]
             );
         });
     });
@@ -171,60 +214,60 @@ describe('sentiment()', function () {
         }
     );
 
-    it('should automatically reprocess a word when its value changes',
+    it('should re-process a word when its value changes',
         function () {
-            var iterator = -1;
+            var index = -1;
 
             tree.visitType(tree.WORD_NODE, function (wordNode) {
-                iterator++;
+                index++;
 
-                wordNode.replaceContent(otherWords[iterator]);
+                wordNode.replaceContent(otherWords[index]);
 
-                assert(wordNode.data.valence === otherValences[iterator]);
-                assert(wordNode.data.polarity === otherPolarities[iterator]);
+                assert(wordNode.data.valence === otherValences[index]);
+                assert(wordNode.data.polarity === otherPolarities[index]);
             });
         }
     );
 
-    it('should automatically reprocess a sentence when its values change',
+    it('should re-process a sentence when its values change',
         function () {
-            var iterator = -1;
+            var index = -1;
 
             tree.visitType(tree.SENTENCE_NODE, function (sentenceNode) {
-                iterator++;
+                index++;
 
                 assert(
                     sentenceNode.data.valence ===
-                    otherSentenceValences[iterator]
+                    otherSentenceValences[index]
                 );
                 assert(
                     sentenceNode.data.polarity ===
-                    otherSentencePolarities[iterator]
+                    otherSentencePolarities[index]
                 );
             });
         }
     );
 
-    it('should automatically reprocess a paragraph when its values change',
+    it('should re-process a paragraph when its values change',
         function () {
-            var iterator = -1;
+            var index = -1;
 
             tree.visitType(tree.PARAGRAPH_NODE, function (paragraphNode) {
-                iterator++;
+                index++;
 
                 assert(
                     paragraphNode.data.valence ===
-                    otherParagraphValences[iterator]
+                    otherParagraphValences[index]
                 );
                 assert(
                     paragraphNode.data.polarity ===
-                    otherParagraphPolarities[iterator]
+                    otherParagraphPolarities[index]
                 );
             });
         }
     );
 
-    it('should automatically reprocess a root when its values change',
+    it('should re-process a root when its values change',
         function () {
             assert(tree.data.valence === 'negative');
             assert(tree.data.polarity === -11);
