@@ -1,21 +1,54 @@
 'use strict';
 
-var afinn, visit, isOwnProperty, NEUTRAL, POSITIVE, NEGATIVE;
+/**
+ * Dependencies.
+ */
+
+var afinn,
+    visit;
 
 afinn = require('afinn-111');
 visit = require('retext-visit');
-isOwnProperty = Object.prototype.hasOwnProperty;
+
+/**
+ * Constants.
+ */
+
+var has,
+    NEUTRAL,
+    POSITIVE,
+    NEGATIVE;
+
+has = Object.prototype.hasOwnProperty;
 
 NEUTRAL = 'neutral';
 POSITIVE = 'positive';
 NEGATIVE = 'negative';
 
+/**
+ * Classify, from a given `polarity` between `-5` and
+ * `5`, if the polarity is `NEGATIVE` (negative),
+ * `NEUTRAL` (0), or `POSITIVE` (positive).
+ *
+ * @param {number} polarity
+ * @return {string}
+ */
+
 function classify(polarity) {
     return polarity > 0 ? POSITIVE : polarity < 0 ? NEGATIVE : NEUTRAL;
 }
 
+/**
+ * Handler for a polarity change in a `parent`.
+ *
+ * @param {Parent} parent
+ * @param {number} substract - Ammount subtract.
+ * @param {number} add - Ammount add.
+ */
+
 function onchangeinparent(parent, substract, add) {
-    var polarity, data;
+    var polarity,
+        data;
 
     if (!parent) {
         return;
@@ -23,7 +56,7 @@ function onchangeinparent(parent, substract, add) {
 
     data = parent.data;
 
-    if (isOwnProperty.call(data, 'polarity')) {
+    if (has.call(data, 'polarity')) {
         polarity = data.polarity;
     } else {
         polarity = 0;
@@ -33,15 +66,26 @@ function onchangeinparent(parent, substract, add) {
 
     data.polarity = polarity;
     data.valence = classify(polarity);
+
     onchangeinparent(parent.parent, substract, add);
 }
 
-function onchange(node) {
-    var data = node.data,
-        polarity = 0,
-        value = node.toString().toLowerCase();
+/**
+ * Handler for a value change in a `node`.
+ *
+ * @param {WordNode} node
+ */
 
-    if (isOwnProperty.call(afinn, value)) {
+function onchange(node) {
+    var data,
+        polarity,
+        value;
+
+    data = node.data;
+    polarity = 0;
+    value = node.toString().toLowerCase();
+
+    if (has.call(afinn, value)) {
         polarity = afinn[value];
     }
 
@@ -49,53 +93,95 @@ function onchange(node) {
     data.valence = classify(polarity);
 }
 
+/**
+ * Handler for a value change in an attached word.
+ *
+ * @this {WordNode}
+ */
+
 function onchangetext() {
-    var self = this,
-        previousPolarity = self.data.polarity;
+    var self,
+        previousPolarity;
+
+    self = this;
+    previousPolarity = self.data.polarity;
 
     onchange(self);
 
     onchangeinparent(self.parent, previousPolarity, self.data.polarity);
 }
 
+/**
+ * Handler for a node's deletion.
+ *
+ * @param {Parent} previousParent
+ * @this {WordNode}
+ */
+
 function onremove(previousParent) {
-    if (!('polarity' in this.data)) {
+    if (!has.call(this.data, 'polarity')) {
         return;
     }
 
     onchangeinparent(previousParent, this.data.polarity, 0);
 }
 
+/**
+ * Handler for a node's insertion.
+ *
+ * @this {WordNode}
+ */
+
 function oninsert() {
     var self = this;
 
-    if (self.type === self.WORD_NODE) {
-        if (!('polarity' in self.data)) {
-            onchange(self);
-        }
-
-        onchangeinparent(self.parent, 0, self.data.polarity);
+    if (!has.call(self.data, 'polarity')) {
+        onchange(self);
     }
+
+    onchangeinparent(self.parent, 0, self.data.polarity);
 }
 
-function plugin(tree) {
+/**
+ * Define `sentiment`.
+ *
+ * @param {Node} tree
+ */
+
+function sentiment(tree) {
     tree.visitType(tree.SENTENCE_NODE, function (sentenceNode) {
         onchangeinparent(sentenceNode.parent, 0, sentenceNode.data.polarity);
     });
 }
 
+/**
+ * Define `attach`.
+ *
+ * @param {Retext} retext
+ */
+
 function attach(retext) {
-    var TextOM = retext.parser.TextOM;
+    var TextOM;
+
+    TextOM = retext.TextOM;
 
     retext.use(visit);
 
     TextOM.WordNode.on('changetextinside', onchangetext);
     TextOM.WordNode.on('removeinside', onchangetext);
     TextOM.WordNode.on('insertinside', onchangetext);
+    TextOM.WordNode.on('insert', oninsert);
     TextOM.Node.on('remove', onremove);
-    TextOM.Node.on('insert', oninsert);
 }
 
-exports = module.exports = plugin;
+/**
+ * Expose `attach`.
+ */
 
-exports.attach = attach;
+sentiment.attach = attach;
+
+/**
+ * Expose `sentiment`.
+ */
+
+module.exports = sentiment;
