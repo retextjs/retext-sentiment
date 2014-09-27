@@ -1,4 +1,18 @@
 
+n.n.n / 2014-09-27
+==================
+
+ * Refactor Readme.md
+ * Refactor API
+ * Remove browser test
+ * Update .gitignore, .npmignore
+ * Update Installation in docs
+ * Fix property order in component.json, package.json, bower.json
+ * Remove testling
+ * Refactor spec
+ * Update dependencies
+ * Remove `npm update npm` from travis before_install
+
 0.1.0 / 2014-09-08
 ==================
 
