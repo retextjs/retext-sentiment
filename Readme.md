@@ -4,14 +4,19 @@ Detect the sentiment of text with **[Retext](https://github.com/wooorm/retext "R
 
 ## Installation
 
-NPM:
+npm:
 ```sh
 $ npm install retext-sentiment
 ```
 
-Component.js:
+Component:
 ```sh
 $ component install wooorm/retext-sentiment
+```
+
+Bower:
+```sh
+$ bower install retext-sentiment
 ```
 
 ## Usage
