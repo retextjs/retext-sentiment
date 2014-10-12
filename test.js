@@ -10,7 +10,7 @@ var sentiment,
  * Dependencies.
  */
 
-sentiment = require('..');
+sentiment = require('./');
 content = require('retext-content');
 Retext = require('retext');
 visit = require('retext-visit');
