@@ -136,7 +136,7 @@ describe('sentiment()', function () {
     it('should process each `WordNode`', function () {
         var index = -1;
 
-        tree.visitType(tree.WORD_NODE, function (wordNode) {
+        tree.visit(tree.WORD_NODE, function (wordNode) {
             index++;
 
             assert(wordNode.data.valence === valences[index]);
@@ -147,7 +147,7 @@ describe('sentiment()', function () {
     it('should process each `SentenceNode`', function () {
         var index = -1;
 
-        tree.visitType(tree.SENTENCE_NODE, function (sentenceNode) {
+        tree.visit(tree.SENTENCE_NODE, function (sentenceNode) {
             index++;
 
             assert(
@@ -162,7 +162,7 @@ describe('sentiment()', function () {
     it('should process each `ParagraphNode`', function () {
         var index = -1;
 
-        tree.visitType(tree.PARAGRAPH_NODE, function (paragraphNode) {
+        tree.visit(tree.PARAGRAPH_NODE, function (paragraphNode) {
             index++;
 
             assert(
@@ -181,7 +181,7 @@ describe('sentiment()', function () {
 
     it('should set `polarity` to `0` and `valence` to `neutral` when a ' +
         'word no longer has a value', function () {
-            tree.visitType(tree.WORD_NODE, function (wordNode) {
+            tree.visit(tree.WORD_NODE, function (wordNode) {
                 wordNode.removeContent();
                 assert(wordNode.data.valence === 'neutral');
                 assert(wordNode.data.polarity === 0);
@@ -191,7 +191,7 @@ describe('sentiment()', function () {
 
     it('should set `polarity` to `0` and `valence` to `neutral` when ' +
         'a sentence no longer has values', function () {
-            tree.visitType(tree.SENTENCE_NODE, function (sentenceNode) {
+            tree.visit(tree.SENTENCE_NODE, function (sentenceNode) {
                 assert(sentenceNode.data.valence === 'neutral');
                 assert(sentenceNode.data.polarity === 0);
             });
@@ -200,7 +200,7 @@ describe('sentiment()', function () {
 
     it('should set `polarity` to `0` and `valence` to `neutral` when ' +
         'a paragraph no longer has values', function () {
-            tree.visitType(tree.PARAGRAPH_NODE, function (paragraphNode) {
+            tree.visit(tree.PARAGRAPH_NODE, function (paragraphNode) {
                 assert(paragraphNode.data.valence === 'neutral');
                 assert(paragraphNode.data.polarity === 0);
             });
@@ -218,7 +218,7 @@ describe('sentiment()', function () {
         function () {
             var index = -1;
 
-            tree.visitType(tree.WORD_NODE, function (wordNode) {
+            tree.visit(tree.WORD_NODE, function (wordNode) {
                 index++;
 
                 wordNode.replaceContent(otherWords[index]);
@@ -233,7 +233,7 @@ describe('sentiment()', function () {
         function () {
             var index = -1;
 
-            tree.visitType(tree.SENTENCE_NODE, function (sentenceNode) {
+            tree.visit(tree.SENTENCE_NODE, function (sentenceNode) {
                 index++;
 
                 assert(
@@ -252,7 +252,7 @@ describe('sentiment()', function () {
         function () {
             var index = -1;
 
-            tree.visitType(tree.PARAGRAPH_NODE, function (paragraphNode) {
+            tree.visit(tree.PARAGRAPH_NODE, function (paragraphNode) {
                 index++;
 
                 assert(

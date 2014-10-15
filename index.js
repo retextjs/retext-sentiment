@@ -149,7 +149,7 @@ function oninsert() {
  */
 
 function sentiment(tree) {
-    tree.visitType(tree.SENTENCE_NODE, function (sentenceNode) {
+    tree.visit(tree.SENTENCE_NODE, function (sentenceNode) {
         onchangeinparent(sentenceNode.parent, 0, sentenceNode.data.polarity);
     });
 }
