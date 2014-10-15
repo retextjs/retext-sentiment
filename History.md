@@ -1,5 +1,5 @@
 
-n.n.n / 2014-10-15
+0.1.2 / 2014-10-15
 ==================
 
  * Update API and tests for changes in retext-visit
