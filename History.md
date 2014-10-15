@@ -1,4 +1,12 @@
 
+n.n.n / 2014-10-15
+==================
+
+ * Update API and tests for changes in retext-visit
+ * Update afinn-111, retext-visit, retext, retext-content
+ * Update .gitignore, .npmignore, bower ignore
+ * Move spec to test.js
+
 0.1.1 / 2014-09-27
 ==================
 
