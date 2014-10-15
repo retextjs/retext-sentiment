@@ -20,8 +20,8 @@
     "retext"
   ],
   "dependencies": {
-    "afinn-111": "^0.1.0",
-    "retext-visit": "^0.1.1"
+    "afinn-111": "^0.1.1",
+    "retext-visit": "^0.2.0"
   },
   "repository": {
     "type": "git",
