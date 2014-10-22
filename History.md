@@ -1,4 +1,11 @@
 
+n.n.n / 2014-10-22
+==================
+
+ * Refactor .jscs.json
+ * Update retext
+ * Update mocha
+
 0.1.2 / 2014-10-15
 ==================
 
