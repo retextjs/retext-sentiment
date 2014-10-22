@@ -33,7 +33,7 @@
     "istanbul": "^0.3.0",
     "jscs": "^1.7.0",
     "mocha": "^2.0.0",
-    "retext": "^0.2.0",
+    "retext": "^0.3.0-rc.1",
     "retext-content": "^0.2.3"
   },
   "scripts": {
