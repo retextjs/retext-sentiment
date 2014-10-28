@@ -31,7 +31,7 @@ retext = new Retext()
  * Fixtures
  */
 
-var document,
+var fixture,
     otherWords,
     valences,
     polarities,
@@ -46,7 +46,7 @@ var document,
     otherParagraphValences,
     otherParagraphPolarities;
 
-document =
+fixture =
     'Some positive, happy, cats. ' +
     'Darn self-deluded, abandoned, dogs.\n' +
     'Home Sweet Home Chicago! ' +
@@ -122,7 +122,7 @@ describe('sentiment()', function () {
     var tree;
 
     before(function (done) {
-        retext.parse(document, function (err, node) {
+        retext.parse(fixture, function (err, node) {
             tree = node;
 
             done(err);
