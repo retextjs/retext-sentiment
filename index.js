@@ -143,24 +143,24 @@ function oninsert() {
 }
 
 /**
- * Define `sentiment`.
+ * Define `onrun`.
  *
  * @param {Node} tree
  */
 
-function sentiment(tree) {
+function onrun(tree) {
     tree.visit(tree.SENTENCE_NODE, function (sentenceNode) {
         onchangeinparent(sentenceNode.parent, 0, sentenceNode.data.polarity);
     });
 }
 
 /**
- * Define `attach`.
+ * Define `sentiment`.
  *
  * @param {Retext} retext
  */
 
-function attach(retext) {
+function sentiment(retext) {
     var TextOM;
 
     TextOM = retext.TextOM;
@@ -172,13 +172,9 @@ function attach(retext) {
     TextOM.WordNode.on('insertinside', onchangetext);
     TextOM.WordNode.on('insert', oninsert);
     TextOM.Node.on('remove', onremove);
+
+    return onrun;
 }
-
-/**
- * Expose `attach`.
- */
-
-sentiment.attach = attach;
 
 /**
  * Expose `sentiment`.
