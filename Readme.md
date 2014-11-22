@@ -1,4 +1,4 @@
-# retext-sentiment [![Build Status](https://travis-ci.org/wooorm/retext-sentiment.svg?branch=master)](https://travis-ci.org/wooorm/retext-sentiment) [![Coverage Status](https://img.shields.io/coveralls/wooorm/retext-sentiment.svg)](https://coveralls.io/r/wooorm/retext-sentiment?branch=master)
+# retext-sentiment [![Build Status](https://img.shields.io/travis/wooorm/retext-sentiment.svg?style=flat)](https://travis-ci.org/wooorm/retext-sentiment) [![Coverage Status](https://img.shields.io/coveralls/wooorm/retext-sentiment.svg?style=flat)](https://coveralls.io/r/wooorm/retext-sentiment?branch=master)
 
 Detect the sentiment of text with **[Retext](https://github.com/wooorm/retext "Retext")**.
 
