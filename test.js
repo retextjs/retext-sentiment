@@ -1,6 +1,7 @@
 'use strict';
 
 var sentiment,
+    inspect,
     content,
     visit,
     Retext,
@@ -11,6 +12,7 @@ var sentiment,
  */
 
 sentiment = require('./');
+inspect = require('retext-inspect');
 content = require('retext-content');
 Retext = require('retext');
 visit = require('retext-visit');
@@ -23,6 +25,7 @@ assert = require('assert');
 var retext;
 
 retext = new Retext()
+    .use(inspect)
     .use(content)
     .use(visit)
     .use(sentiment);
