@@ -31,9 +31,9 @@
   "devDependencies": {
     "eslint": "^0.9.0",
     "istanbul": "^0.3.0",
-    "jscs": "^1.7.0",
+    "jscs": "^1.0.0",
     "mocha": "^2.0.0",
-    "retext": "^0.3.0-rc.2",
+    "retext": "^0.4.0",
     "retext-content": "^0.2.5"
   },
   "scripts": {
