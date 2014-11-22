@@ -22,12 +22,11 @@ $ bower install retext-sentiment
 ## Usage
 
 ```js
-var Retext = require('retext'),
-    visit = require('retext-visit'),
-    sentiment = require('retext-sentiment'),
-    retext;
+var Retext = require('retext');
+var visit = require('retext-visit');
+var sentiment = require('retext-sentiment');
 
-retext = new Retext()
+var retext = new Retext()
     .use(visit)
     .use(sentiment);
 
@@ -42,7 +41,7 @@ retext.parse(
          * 'neutral', 0
          */
 
-        tree.visitType(tree.SENTENCE_NODE, function (sentenceNode) {
+        tree.visit(tree.SENTENCE_NODE, function (sentenceNode) {
             console.log(sentenceNode.data.valence, sentenceNode.data.polarity);
         });
         /**
@@ -51,7 +50,7 @@ retext.parse(
          * 'negative', -3
          */
 
-        tree.visitType(tree.WORD_NODE, function (wordNode) {
+        tree.visit(tree.WORD_NODE, function (wordNode) {
             if (!wordNode.data.polarity) {
                 return;
             }
@@ -74,7 +73,7 @@ retext.parse(
 
 ## API
 
-None, **retext-sentiment** automatically detects the sentiment of each word (using **[wooorm/afinn-111](https://github.com/wooorm/afinn-111)**) when it’s created or changed, and stores the valence in `word.data.valence`, and polarity in `word.data.polarity`.
+None, **retext-sentiment** automatically detects the sentiment of each word (using **[wooorm/afinn-111](https://github.com/wooorm/afinn-111)**), and stores the valence in `word.data.valence`, and polarity in `word.data.polarity`.
 
 In addition, the plugin exposes the average of the detected sentiment on parents (sentences, paragraphs, and root nodes), through the same `valence` and `polarity` properties.
 
