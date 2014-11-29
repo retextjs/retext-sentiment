@@ -1,4 +1,11 @@
 
+n.n.n / 2014-11-29
+==================
+
+ * Add support for negation
+ * Add link to personal website in `Readme.md`
+ * Update eslint
+
 0.1.5 / 2014-11-22
 ==================
 
