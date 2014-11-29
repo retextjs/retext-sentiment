@@ -1,6 +1,6 @@
 {
   "name": "retext-sentiment",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "Detect the sentiment of text with Retext",
   "license": "MIT",
   "keywords": [
