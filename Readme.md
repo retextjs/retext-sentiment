@@ -82,4 +82,4 @@ Polarity? A number between `-5` and `5` (both including).
 
 ## License
 
-MIT © Titus Wormer
+MIT © [Titus Wormer](http://wooorm.com)
