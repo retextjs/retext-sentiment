@@ -290,3 +290,24 @@ describe('sentiment()', function () {
         }
     );
 });
+
+describe('algorithm', function () {
+    it('should support negation', function (done) {
+        retext.parse('This product is not bad at all.', function (err, tree) {
+            var not,
+                bad;
+
+            assert(tree.data.polarity === 3);
+            assert(tree.head.data.polarity === 3);
+            assert(tree.head.head.data.polarity === 3);
+
+            not = tree.head.head[6];
+            bad = tree.head.head[8];
+
+            assert(not.data.polarity === 0);
+            assert(bad.data.polarity === -3);
+
+            done(err);
+        });
+    });
+});

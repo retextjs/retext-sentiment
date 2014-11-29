@@ -39,51 +39,97 @@ function classify(polarity) {
 }
 
 /**
+ * Detect if a value is used to negate something
+ *
+ * @param {Node} node
+ * @return {string}
+ */
+
+function isNegation(node) {
+    var value;
+
+    value = node.toString().toLowerCase();
+
+    if (
+        value === 'not' ||
+        value === 'neither' ||
+        value === 'nor' ||
+        /n['’]t/.test(value)
+    ) {
+        return true;
+    }
+
+    return false;
+}
+
+/**
  * Handler for a polarity change in a `parent`.
  *
  * @param {Parent} parent
- * @param {number} substract - Ammount subtract.
- * @param {number} add - Ammount add.
  */
 
-function onchangeinparent(parent, substract, add) {
+function onchangeinparent(parent) {
     var polarity,
-        data;
+        hasNegation,
+        node;
 
     if (!parent) {
         return;
     }
 
-    data = parent.data;
+    polarity = 0;
 
-    if (has.call(data, 'polarity')) {
-        polarity = data.polarity;
-    } else {
-        polarity = 0;
+    node = parent.head;
+
+    while (node) {
+        /**
+         * Add the polarity. If the previous word,
+         * contained negation, negate the polarity.
+         */
+
+        if (node.data.polarity) {
+            polarity += (hasNegation ? -1 : 1) * node.data.polarity;
+        }
+
+        /**
+         * If the value is a word, remove any present
+         * negation. Otherwise, add negation if the
+         * node contains it.
+         */
+
+        if (node.type === node.WORD_NODE) {
+            if (hasNegation) {
+                hasNegation = false;
+            } else if (isNegation(node)) {
+                hasNegation = true;
+            }
+        }
+
+        node = node.next;
     }
 
-    polarity = polarity - substract + add;
+    parent.data.polarity = polarity;
+    parent.data.valence = classify(polarity);
 
-    data.polarity = polarity;
-    data.valence = classify(polarity);
-
-    onchangeinparent(parent.parent, substract, add);
+    onchangeinparent(parent.parent);
 }
 
 /**
  * Handler for a value change in a `node`.
  *
- * @param {WordNode} node
+ * @param {Node} node
  */
 
-function onchange(node) {
-    var data,
+function onchange() {
+    var self,
+        data,
         polarity,
         value;
 
-    data = node.data;
+    self = this;
+    data = self.data;
     polarity = 0;
-    value = node.toString().toLowerCase();
+    value = self.toString().toLowerCase();
 
     if (has.call(afinn, value)) {
         polarity = afinn[value];
@@ -91,55 +137,8 @@ function onchange(node) {
 
     data.polarity = polarity;
     data.valence = classify(polarity);
-}
 
-/**
- * Handler for a value change in an attached word.
- *
- * @this {WordNode}
- */
-
-function onchangetext() {
-    var self,
-        previousPolarity;
-
-    self = this;
-    previousPolarity = self.data.polarity;
-
-    onchange(self);
-
-    onchangeinparent(self.parent, previousPolarity, self.data.polarity);
-}
-
-/**
- * Handler for a node's deletion.
- *
- * @param {Parent} previousParent
- * @this {WordNode}
- */
-
-function onremove(previousParent) {
-    if (!has.call(this.data, 'polarity')) {
-        return;
-    }
-
-    onchangeinparent(previousParent, this.data.polarity, 0);
-}
-
-/**
- * Handler for a node's insertion.
- *
- * @this {WordNode}
- */
-
-function oninsert() {
-    var self = this;
-
-    if (!has.call(self.data, 'polarity')) {
-        onchange(self);
-    }
-
-    onchangeinparent(self.parent, 0, self.data.polarity);
+    onchangeinparent(self.parent);
 }
 
 /**
@@ -150,7 +149,7 @@ function oninsert() {
 
 function onrun(tree) {
     tree.visit(tree.SENTENCE_NODE, function (sentenceNode) {
-        onchangeinparent(sentenceNode.parent, 0, sentenceNode.data.polarity);
+        onchangeinparent(sentenceNode.parent);
     });
 }
 
@@ -167,11 +166,11 @@ function sentiment(retext) {
 
     retext.use(visit);
 
-    TextOM.WordNode.on('changetextinside', onchangetext);
-    TextOM.WordNode.on('removeinside', onchangetext);
-    TextOM.WordNode.on('insertinside', onchangetext);
-    TextOM.WordNode.on('insert', oninsert);
-    TextOM.Node.on('remove', onremove);
+    TextOM.WordNode.on('changetextinside', onchange);
+    TextOM.WordNode.on('removeinside', onchange);
+    TextOM.WordNode.on('insertinside', onchange);
+    TextOM.WordNode.on('insert', onchange);
+    TextOM.Node.on('remove', onchangeinparent);
 
     return onrun;
 }
