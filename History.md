@@ -1,4 +1,19 @@
 
+n.n.n / 2014-11-30
+==================
+
+ * Merge branch 'feature/add-support-for-injection'
+ * Add polarity injection useage and description to `Readme.md`
+ * Add polarity injection to module
+ * Add test for polarity injection
+ * Merge branch 'feature/support-non-word-valence'
+ * Refactor `Readme.md` to contains info on calculated polarity
+ * Refactor `Readme.md` to contain emoji
+ * Refactor useage in `Readme.md` to contain negation
+ * Add test for `Text` nodes with valence
+ * Add new database; add emoji-emotion as a dev-dependency
+ * Add `change` listeners to `Text` nodes
+
 0.2.0 / 2014-11-29
 ==================
 
