@@ -72,13 +72,42 @@ retext.parse(
 );
 ```
 
+**retext-sentiment** knows about the sentiment of emoji too, and works great with [**wooorm/retext-emoji**](https://github.com/wooorm/retext-emoji):
+
+```js
+var Retext = require('retext');
+var emoji = require('retext-emoji');
+var inspect = require('retext-inspect');
+var sentiment = require('retext-sentiment');
+
+var retext = new Retext()
+    .use(emoji)
+    .use(inspect)
+    .use(sentiment);
+
+retext.parse('Hai sexy! \ud83d\ude0f', function (err, tree) {
+    console.log(tree.head.head);
+    /**
+     * SentenceNode[6] [data={"polarity":6,"valence":"positive"}]
+     * ├─ WordNode[1] [data={"polarity":0,"valence":"neutral"}]
+     * │  └─ TextNode: 'Hai' [data={"polarity":0,"valence":"neutral"}]
+     * ├─ WhiteSpaceNode: ' ' [data={"polarity":0,"valence":"neutral"}]
+     * ├─ WordNode[1] [data={"polarity":3,"valence":"positive"}]
+     * │  └─ TextNode: 'sexy' [data={"polarity":3,"valence":"positive"}]
+     * ├─ PunctuationNode: '!' [data={"polarity":0,"valence":"neutral"}]
+     * ├─ WhiteSpaceNode: ' ' [data={"polarity":0,"valence":"neutral"}]
+     * └─ EmoticonNode: '😏' [data={"names":["smirk"],"description":"smirking face","tags":["smug"],"polarity":3,"valence":"positive"}]
+     */
+});
+```
+
 ## Supported Words
 
-**retext-sentiment** supports all words **[wooorm/afinn-111](https://github.com/wooorm/afinn-111#supported-words)** supports.
+**retext-sentiment** supports all **[wooorm/afinn-111](https://github.com/wooorm/afinn-111#supported-words)** words and **[wooorm/emoji-emotion](https://github.com/wooorm/emoji-emotion#supported-emoji)** emoji/gemoji.
 
 ## API
 
-None, **retext-sentiment** automatically detects the sentiment of each word (using **[wooorm/afinn-111](https://github.com/wooorm/afinn-111)**), and stores the valence in `word.data.valence`, and polarity in `word.data.polarity`.
+None, **retext-sentiment** automatically detects the sentiment of each [Text](https://github.com/wooorm/textom#textomtextvalue-nlcsttext)/[WordNode](https://github.com/wooorm/textom#textomwordnode-nlcstwordnode) (using [**wooorm/afinn-111**](https://github.com/wooorm/afinn-111) and [**wooorm/emoji-emotion**](https://github.com/wooorm/emoji-emotion)), and stores the valence in `node.data.valence`, and polarity in `node.data.polarity`.
 
 In addition, the plugin exposes the average of the detected sentiment on parents (sentences, paragraphs, and root nodes), through the same `valence` and `polarity` properties.
 
