@@ -4,10 +4,10 @@
  * Dependencies.
  */
 
-var afinn,
+var polarities,
     visit;
 
-afinn = require('afinn-111');
+polarities = require('./data/data.json');
 visit = require('retext-visit');
 
 /**
@@ -131,8 +131,8 @@ function onchange() {
     polarity = 0;
     value = self.toString().toLowerCase();
 
-    if (has.call(afinn, value)) {
-        polarity = afinn[value];
+    if (has.call(polarities, value)) {
+        polarity = polarities[value];
     }
 
     data.polarity = polarity;
@@ -166,10 +166,9 @@ function sentiment(retext) {
 
     retext.use(visit);
 
-    TextOM.WordNode.on('changetextinside', onchange);
-    TextOM.WordNode.on('removeinside', onchange);
-    TextOM.WordNode.on('insertinside', onchange);
+    TextOM.Text.on('insert', onchange);
     TextOM.WordNode.on('insert', onchange);
+
     TextOM.Node.on('remove', onchangeinparent);
 
     return onrun;

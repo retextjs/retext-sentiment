@@ -20,7 +20,6 @@
     "retext"
   ],
   "dependencies": {
-    "afinn-111": "^0.1.1",
     "retext-visit": "^0.2.2"
   },
   "repository": {
@@ -38,6 +37,7 @@
     "components/",
     "coverage/",
     "node_modules/",
+    "script/",
     "component.json",
     "package.json",
     "test.js"

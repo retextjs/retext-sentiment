@@ -310,4 +310,32 @@ describe('algorithm', function () {
             done(err);
         });
     });
+
+    it('should support negation on `Text` nodes', function (done) {
+        retext.parse('Not worried!', function (err, tree) {
+            var not,
+                worried;
+
+            /**
+             * Replace the `worried` `Word` with a
+             * `worried` `Symbol` emoji.
+             */
+
+            tree.head.head[2].replace(
+                new tree.TextOM.SymbolNode('\ud83d\ude1f')
+            );
+
+            assert(tree.data.polarity === 4);
+            assert(tree.head.data.polarity === 4);
+            assert(tree.head.head.data.polarity === 4);
+
+            not = tree.head.head[0];
+            worried = tree.head.head[2];
+
+            assert(not.data.polarity === 0);
+            assert(worried.data.polarity === -4);
+
+            done(err);
+        });
+    });
 });
