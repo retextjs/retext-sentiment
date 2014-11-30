@@ -166,10 +166,9 @@ function sentiment(retext) {
 
     retext.use(visit);
 
-    TextOM.WordNode.on('changetextinside', onchange);
-    TextOM.WordNode.on('removeinside', onchange);
-    TextOM.WordNode.on('insertinside', onchange);
+    TextOM.Text.on('insert', onchange);
     TextOM.WordNode.on('insert', onchange);
+
     TextOM.Node.on('remove', onchangeinparent);
 
     return onrun;
