@@ -115,30 +115,41 @@ function onchangeinparent(parent) {
 }
 
 /**
- * Handler for a value change in a `node`.
+ * Factory to create a bound `onchange` method.
  *
- * @param {Node} node
+ * @param {Object?} inject
+ * @return {function(this:Node)}
  */
 
-function onchange() {
-    var self,
-        data,
-        polarity,
-        value;
+function onchangeFactory(inject) {
+    /**
+     * Handler for a value change in a `node`.
+     *
+     * @this {Node}
+     */
 
-    self = this;
-    data = self.data;
-    polarity = 0;
-    value = self.toString().toLowerCase();
+    return function () {
+        var self,
+            data,
+            polarity,
+            value;
 
-    if (has.call(polarities, value)) {
-        polarity = polarities[value];
-    }
+        self = this;
+        data = self.data;
+        polarity = 0;
+        value = self.toString().toLowerCase();
 
-    data.polarity = polarity;
-    data.valence = classify(polarity);
+        if (inject && has.call(inject, value)) {
+            polarity = inject[value];
+        } else if (has.call(polarities, value)) {
+            polarity = polarities[value];
+        }
 
-    onchangeinparent(self.parent);
+        data.polarity = polarity;
+        data.valence = classify(polarity);
+
+        onchangeinparent(self.parent);
+    };
 }
 
 /**
@@ -159,12 +170,15 @@ function onrun(tree) {
  * @param {Retext} retext
  */
 
-function sentiment(retext) {
-    var TextOM;
+function sentiment(retext, inject) {
+    var TextOM,
+        onchange;
 
     TextOM = retext.TextOM;
 
     retext.use(visit);
+
+    onchange = onchangeFactory(inject);
 
     TextOM.Text.on('insert', onchange);
     TextOM.WordNode.on('insert', onchange);
