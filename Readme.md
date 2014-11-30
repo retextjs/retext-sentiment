@@ -34,34 +34,39 @@ retext.parse(
     'Haha hanks and happy birthday!!!!! ' +
     'I hate forgetting to bring a book somewhere I ' +
     'definitely should have brought a book to. ' +
-    'Hate having to wait a whole week until the next game now.',
+    /**
+     * Note that `bad` is a negative word, but that it's
+     * classified as positive due to its preceding `not`
+     * on parent (sentence, paragraph, root) level.
+     */
+    'This product is not bad at all.',
     function (err, tree) {
         console.log(tree.data.valence, tree.data.polarity);
         /**
-         * 'neutral', 0
+         * Logs: 'positive', 6
          */
 
-        tree.visit(tree.SENTENCE_NODE, function (sentenceNode) {
-            console.log(sentenceNode.data.valence, sentenceNode.data.polarity);
+        tree.visit(tree.SENTENCE_NODE, function (node) {
+            console.log(node.data.valence, node.data.polarity);
         });
         /**
+         * Logs:
          * 'positive', 6
          * 'negative', -3
-         * 'negative', -3
+         * 'positive', 3
          */
 
-        tree.visit(tree.WORD_NODE, function (wordNode) {
-            if (!wordNode.data.polarity) {
-                return;
+        tree.visit(tree.WORD_NODE, function (node) {
+            if (node.data.polarity) {
+                console.log(node.toString(), node.data.valence, node.data.polarity);
             }
-
-            console.log(wordNode.toString(), wordNode.data.valence);
         });
         /**
-         * 'Haha', 'positive'
-         * 'happy', 'positive'
-         * 'hate', 'negative'
-         * 'Hate', 'negative'
+         * Logs:
+         * 'Haha', 'positive', 3
+         * 'happy', 'positive', 3
+         * 'hate', 'negative', -3
+         * 'bad', 'negative', -3
          */
     }
 );
