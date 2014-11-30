@@ -20,7 +20,6 @@
     "retext"
   ],
   "dependencies": {
-    "afinn-111": "^0.1.1",
     "retext-visit": "^0.2.2"
   },
   "repository": {
@@ -29,7 +28,10 @@
   },
   "author": "Titus Wormer <tituswormer@gmail.com>",
   "devDependencies": {
+    "afinn-111": "^0.1.1",
+    "emoji-emotion": "^0.0.1",
     "eslint": "^0.10.0",
+    "gemoji": "^0.2.1",
     "istanbul": "^0.3.0",
     "jscs": "^1.0.0",
     "mocha": "^2.0.0",
@@ -42,9 +44,13 @@
     "test-travis": "node_modules/.bin/istanbul cover node_modules/.bin/_mocha --report lcovonly -- --reporter spec --check-leaks -u exports test.js",
     "coverage": "node_modules/.bin/istanbul cover node_modules/.bin/_mocha -- -- test.js",
     "lint-api": "node_modules/.bin/eslint index.js",
+    "lint-script": "node_modules/.bin/eslint script/build-list.js",
     "lint-test": "node_modules/.bin/eslint test.js --env mocha",
-    "lint-style": "node_modules/.bin/jscs index.js test.js --reporter=inline",
-    "lint": "npm run lint-api && npm run lint-test && npm run lint-style",
-    "make": "npm run lint && npm run coverage"
+    "lint-style": "node_modules/.bin/jscs index.js test.js script/build-list.js --reporter=inline",
+    "lint": "npm run lint-api && npm run lint-script && npm run lint-test && npm run lint-style",
+    "make": "npm run lint && npm run coverage",
+    "build-list": "node script/build-list.js",
+    "build": "npm run build-list",
+    "prepublish": "npm run build"
   }
 }

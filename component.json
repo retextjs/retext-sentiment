@@ -20,11 +20,13 @@
     "retext"
   ],
   "dependencies": {
-    "wooorm/afinn-111": "^0.1.1",
     "wooorm/retext-visit": "^0.2.2"
   },
   "repository": "wooorm/retext-sentiment",
   "scripts": [
     "index.js"
+  ],
+  "json": [
+    "data/data.json"
   ]
 }
