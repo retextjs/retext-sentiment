@@ -1,5 +1,5 @@
 
-n.n.n / 2014-11-30
+0.3.0 / 2014-11-30
 ==================
 
  * Merge branch 'feature/add-support-for-injection'
