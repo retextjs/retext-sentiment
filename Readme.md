@@ -109,10 +109,9 @@ retext.parse('Hai sexy! \ud83d\ude0f', function (err, tree) {
 
 None, **retext-sentiment** automatically detects the sentiment of each [Text](https://github.com/wooorm/textom#textomtextvalue-nlcsttext)/[WordNode](https://github.com/wooorm/textom#textomwordnode-nlcstwordnode) (using [**wooorm/afinn-111**](https://github.com/wooorm/afinn-111) and [**wooorm/emoji-emotion**](https://github.com/wooorm/emoji-emotion)), and stores the valence in `node.data.valence`, and polarity in `node.data.polarity`.
 
-In addition, the plugin exposes the average of the detected sentiment on parents (sentences, paragraphs, and root nodes), through the same `valence` and `polarity` properties.
+Valence? Either `"neutral"`, `"positive"`, or `"negative"`. Polarity? A number between `-5` and `5` (both including).
 
-Valence? Either `"neutral"`, `"positive"`, or `"negative"`.
-Polarity? A number between `-5` and `5` (both including).
+In addition, the plugin exposes a calculated sentiment on parents (sentences, paragraphs, and root nodes), through the same `valence` and `polarity` properties. This calculated sentiment includes negation, so a word such as `bad`, with a polarity of `-3`, is calculated as `3` when preceded by a word such as `not`, `neither`, `nor`, or a word ending in `n't`.
 
 ## License
 
