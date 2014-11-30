@@ -107,7 +107,16 @@ retext.parse('Hai sexy! \ud83d\ude0f', function (err, tree) {
 
 ## API
 
-None, **retext-sentiment** automatically detects the sentiment of each [Text](https://github.com/wooorm/textom#textomtextvalue-nlcsttext)/[WordNode](https://github.com/wooorm/textom#textomwordnode-nlcstwordnode) (using [**wooorm/afinn-111**](https://github.com/wooorm/afinn-111) and [**wooorm/emoji-emotion**](https://github.com/wooorm/emoji-emotion)), and stores the valence in `node.data.valence`, and polarity in `node.data.polarity`.
+```js
+new Retext().use(sentiment, {
+    'cat': -3,
+    'dog': 3
+});
+```
+
+- Options - Object mapping strings (words, other symbols) to numbers. Used to insert custom values, or overwrite existing values with new weights.
+
+**retext-sentiment** automatically detects the sentiment of each [Text](https://github.com/wooorm/textom#textomtextvalue-nlcsttext)/[WordNode](https://github.com/wooorm/textom#textomwordnode-nlcstwordnode) (using [**wooorm/afinn-111**](https://github.com/wooorm/afinn-111) and [**wooorm/emoji-emotion**](https://github.com/wooorm/emoji-emotion)), and stores the valence in `node.data.valence`, and polarity in `node.data.polarity`.
 
 Valence? Either `"neutral"`, `"positive"`, or `"negative"`. Polarity? A number between `-5` and `5` (both including).
 
