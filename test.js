@@ -339,3 +339,28 @@ describe('algorithm', function () {
         });
     });
 });
+
+describe('inject', function () {
+    it('should support injection', function (done) {
+        var customRetext;
+
+        customRetext = new Retext()
+            .use(inspect)
+            .use(content)
+            .use(visit)
+            .use(sentiment, {
+                'dog': 3,
+                'cat': -3
+            });
+
+        customRetext.parse('Cat and dog', function (err, tree) {
+            assert(tree.data.polarity === 0);
+            assert(tree.head.data.polarity === 0);
+            assert(tree.head.head.data.polarity === 0);
+            assert(tree.head.head.head.data.polarity === -3);
+            assert(tree.head.head.tail.data.polarity === 3);
+
+            done(err);
+        });
+    });
+});
