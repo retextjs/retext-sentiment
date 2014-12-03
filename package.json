@@ -30,6 +30,7 @@
   "devDependencies": {
     "afinn-111": "^0.1.1",
     "emoji-emotion": "^0.0.1",
+    "emoticon": "^0.0.1",
     "eslint": "^0.10.0",
     "gemoji": "^0.2.1",
     "istanbul": "^0.3.0",

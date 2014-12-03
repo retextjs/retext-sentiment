@@ -72,7 +72,7 @@ retext.parse(
 );
 ```
 
-**retext-sentiment** knows about the sentiment of emoji too, and works great with [**wooorm/retext-emoji**](https://github.com/wooorm/retext-emoji):
+**retext-sentiment** knows about the sentiment of emoji, gemoji, and emoticons too, and works great with [**wooorm/retext-emoji**](https://github.com/wooorm/retext-emoji):
 
 ```js
 var Retext = require('retext');

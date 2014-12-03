@@ -6,11 +6,13 @@
 
 var afinn,
     emojiEmotion,
+    emoticons,
     gemoji,
     fs;
 
 afinn = require('afinn-111');
 emojiEmotion = require('emoji-emotion');
+emoticons = require('emoticon');
 gemoji = require('gemoji');
 fs = require('fs');
 
@@ -44,6 +46,18 @@ emojiEmotion.forEach(function (info) {
 
 emojiEmotion.forEach(function (info) {
     list[':' + gemoji.unicode[info.emoji].name + ':'] = info.polarity;
+});
+
+/**
+ * Add `emoji-emotion` as gemoji.
+ */
+
+emojiEmotion.forEach(function (info) {
+    if (info.emoji in emoticons.unicode) {
+        emoticons.unicode[info.emoji].emoticons.forEach(function (emoticon) {
+            list[emoticon] = info.polarity;
+        });
+    }
 });
 
 /**
