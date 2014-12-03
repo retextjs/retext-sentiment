@@ -1,5 +1,5 @@
 
-n.n.n / 2014-12-03
+0.4.0 / 2014-12-03
 ==================
 
  * Add support for plain-text emoticons
