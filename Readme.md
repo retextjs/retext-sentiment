@@ -1,6 +1,6 @@
 # retext-sentiment [![Build Status](https://img.shields.io/travis/wooorm/retext-sentiment.svg?style=flat)](https://travis-ci.org/wooorm/retext-sentiment) [![Coverage Status](https://img.shields.io/coveralls/wooorm/retext-sentiment.svg?style=flat)](https://coveralls.io/r/wooorm/retext-sentiment?branch=master)
 
-Detect the sentiment of text with **[Retext](https://github.com/wooorm/retext "Retext")**.
+Sentiment decetion with **[Retext](https://github.com/wooorm/retext)**.
 
 ## Installation
 
@@ -114,9 +114,9 @@ new Retext().use(sentiment, {
 });
 ```
 
-- Options - Object mapping strings (words, other symbols) to numbers. Used to insert custom values, or overwrite existing values with new weights.
+- Options (`Object` or `null`) — Mapping strings (words, other symbols) to numbers. Used to insert custom values, or overwrite existing values with new weights.
 
-**retext-sentiment** automatically detects the sentiment of each [Text](https://github.com/wooorm/textom#textomtextvalue-nlcsttext)/[WordNode](https://github.com/wooorm/textom#textomwordnode-nlcstwordnode) (using [**wooorm/afinn-111**](https://github.com/wooorm/afinn-111) and [**wooorm/emoji-emotion**](https://github.com/wooorm/emoji-emotion)), and stores the valence in `node.data.valence`, and polarity in `node.data.polarity`.
+**retext-sentiment** automatically detects the sentiment of each [`Text`](https://github.com/wooorm/textom#textomtextvalue-nlcsttext)/[`WordNode`](https://github.com/wooorm/textom#textomwordnode-nlcstwordnode) (using [**wooorm/afinn-111**](https://github.com/wooorm/afinn-111) and [**wooorm/emoji-emotion**](https://github.com/wooorm/emoji-emotion)), and stores the valence in `node.data.valence`, and polarity in `node.data.polarity`.
 
 Valence? Either `"neutral"`, `"positive"`, or `"negative"`. Polarity? A number between `-5` and `5` (both including).
 
