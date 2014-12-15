@@ -1,4 +1,11 @@
 
+n.n.n / 2014-12-15
+==================
+
+ * Add benchmark
+ * Fix wording in `Readme.md`
+ * Update emoji-emotion, emoticon, retext
+
 0.4.0 / 2014-12-03
 ==================
 
