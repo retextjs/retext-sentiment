@@ -6,7 +6,8 @@ components/
 coverage/
 node_modules/
 script/
-test.js
 bower.json
 component.json
+benchmark.js
+test.js
 History.md

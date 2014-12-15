@@ -122,6 +122,20 @@ Valence? Either `"neutral"`, `"positive"`, or `"negative"`. Polarity? A number b
 
 In addition, the plugin exposes a calculated sentiment on parents (sentences, paragraphs, and root nodes), through the same `valence` and `polarity` properties. This calculated sentiment includes negation, so a word such as `bad`, with a polarity of `-3`, is calculated as `3` when preceded by a word such as `not`, `neither`, `nor`, or a word ending in `n't`.
 
+## Performance
+
+On a MacBook Air. **retext** works about 52% slower, when using **retext-sentiment**.
+
+```
+           retext w/o retext-sentiment
+  189 op/s » A paragraph (5 sentences, 100 words, lots of sentiment)
+  232 op/s » A paragraph (5 sentences, 100 words, no sentiment)
+
+           retext w/ retext-sentiment
+   90 op/s » A paragraph (5 sentences, 100 words, lots of sentiment)
+  111 op/s » A paragraph (5 sentences, 100 words, no sentiment)
+```
+
 ## License
 
 MIT © [Titus Wormer](http://wooorm.com)
