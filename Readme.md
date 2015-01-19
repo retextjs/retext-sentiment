@@ -5,23 +5,26 @@ Sentiment decetion with **[Retext](https://github.com/wooorm/retext)**.
 ## Installation
 
 npm:
-```sh
+
+```bash
 $ npm install retext-sentiment
 ```
 
 Component:
-```sh
+
+```bash
 $ component install wooorm/retext-sentiment
 ```
 
 Bower:
-```sh
+
+```bash
 $ bower install retext-sentiment
 ```
 
 ## Usage
 
-```js
+```javascript
 var Retext = require('retext');
 var visit = require('retext-visit');
 var sentiment = require('retext-sentiment');
@@ -74,7 +77,7 @@ retext.parse(
 
 **retext-sentiment** knows about the sentiment of emoji, gemoji, and emoticons too, and works great with [**wooorm/retext-emoji**](https://github.com/wooorm/retext-emoji):
 
-```js
+```javascript
 var Retext = require('retext');
 var emoji = require('retext-emoji');
 var inspect = require('retext-inspect');
@@ -107,7 +110,7 @@ retext.parse('Hai sexy! \ud83d\ude0f', function (err, tree) {
 
 ## API
 
-```js
+```javascript
 new Retext().use(sentiment, {
     'cat': -3,
     'dog': 3
@@ -126,7 +129,7 @@ In addition, the plugin exposes a calculated sentiment on parents (sentences, pa
 
 On a MacBook Air. **retext** works about 52% slower, when using **retext-sentiment**.
 
-```
+```text
            retext w/o retext-sentiment
   189 op/s » A paragraph (5 sentences, 100 words, lots of sentiment)
   232 op/s » A paragraph (5 sentences, 100 words, no sentiment)
