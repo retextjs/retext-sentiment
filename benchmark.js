@@ -55,7 +55,6 @@ sentimentParagraph = 'Thou art a weird knight to so ' +
     'gone since ' + gemoji.name.man.emoji + ' does not ' +
     'choose to assume my fight.';
 
-
 /**
  * A paragraph, 5 sentences, without emojis.
  */
