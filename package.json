@@ -31,7 +31,7 @@
     "afinn-111": "^0.1.1",
     "emoji-emotion": "^0.1.0",
     "emoticon": "^0.1.0",
-    "eslint": "^0.10.0",
+    "eslint": "^0.12.0",
     "gemoji": "^0.2.1",
     "istanbul": "^0.3.0",
     "jscs": "^1.0.0",
