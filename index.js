@@ -1,6 +1,6 @@
 'use strict';
 
-/**
+/*
  * Dependencies.
  */
 
@@ -10,7 +10,7 @@ var polarities,
 polarities = require('./data/data.json');
 visit = require('retext-visit');
 
-/**
+/*
  * Constants.
  */
 
@@ -33,7 +33,6 @@ NEGATIVE = 'negative';
  * @param {number} polarity
  * @return {string}
  */
-
 function classify(polarity) {
     return polarity > 0 ? POSITIVE : polarity < 0 ? NEGATIVE : NEUTRAL;
 }
@@ -42,9 +41,8 @@ function classify(polarity) {
  * Detect if a value is used to negate something
  *
  * @param {Node} node
- * @return {string}
+ * @return {boolean}
  */
-
 function isNegation(node) {
     var value;
 
@@ -67,7 +65,6 @@ function isNegation(node) {
  *
  * @param {Parent} parent
  */
-
 function onchangeinparent(parent) {
     var polarity,
         hasNegation,
@@ -82,7 +79,7 @@ function onchangeinparent(parent) {
     node = parent.head;
 
     while (node) {
-        /**
+        /*
          * Add the polarity. If the previous word,
          * contained negation, negate the polarity.
          */
@@ -91,7 +88,7 @@ function onchangeinparent(parent) {
             polarity += (hasNegation ? -1 : 1) * node.data.polarity;
         }
 
-        /**
+        /*
          * If the value is a word, remove any present
          * negation. Otherwise, add negation if the
          * node contains it.
@@ -120,14 +117,12 @@ function onchangeinparent(parent) {
  * @param {Object?} inject
  * @return {function(this:Node)}
  */
-
 function onchangeFactory(inject) {
     /**
      * Handler for a value change in a `node`.
      *
      * @this {Node}
      */
-
     return function () {
         var self,
             data,
@@ -157,7 +152,6 @@ function onchangeFactory(inject) {
  *
  * @param {Node} tree
  */
-
 function onrun(tree) {
     tree.visit(tree.SENTENCE_NODE, function (sentenceNode) {
         onchangeinparent(sentenceNode.parent);
@@ -168,8 +162,8 @@ function onrun(tree) {
  * Define `sentiment`.
  *
  * @param {Retext} retext
+ * @return {Function} - See `onrun`.
  */
-
 function sentiment(retext, inject) {
     var TextOM,
         onchange;
@@ -188,7 +182,7 @@ function sentiment(retext, inject) {
     return onrun;
 }
 
-/**
+/*
  * Expose `sentiment`.
  */
 

@@ -1,6 +1,6 @@
 'use strict';
 
-/**
+/*
  * Dependencies.
  */
 
@@ -16,7 +16,7 @@ emoticons = require('emoticon');
 gemoji = require('gemoji');
 fs = require('fs');
 
-/**
+/*
  * Data.
  */
 
@@ -24,7 +24,7 @@ var list;
 
 list = {};
 
-/**
+/*
  * Add `afinn`.
  */
 
@@ -32,7 +32,7 @@ Object.keys(afinn).sort().forEach(function (key) {
     list[key] = afinn[key];
 });
 
-/**
+/*
  * Add `emoji-emotion` as unicode emoji.
  */
 
@@ -40,7 +40,7 @@ emojiEmotion.forEach(function (info) {
     list[info.emoji] = info.polarity;
 });
 
-/**
+/*
  * Add `emoji-emotion` as gemoji.
  */
 
@@ -48,7 +48,7 @@ emojiEmotion.forEach(function (info) {
     list[':' + gemoji.unicode[info.emoji].name + ':'] = info.polarity;
 });
 
-/**
+/*
  * Add `emoji-emotion` as gemoji.
  */
 
@@ -60,7 +60,7 @@ emojiEmotion.forEach(function (info) {
     }
 });
 
-/**
+/*
  * Write.
  */
 

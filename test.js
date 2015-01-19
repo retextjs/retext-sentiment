@@ -7,7 +7,7 @@ var sentiment,
     Retext,
     assert;
 
-/**
+/*
  * Dependencies.
  */
 
@@ -18,7 +18,7 @@ Retext = require('retext');
 visit = require('retext-visit');
 assert = require('assert');
 
-/**
+/*
  * Retext.
  */
 
@@ -30,7 +30,7 @@ retext = new Retext()
     .use(visit)
     .use(sentiment);
 
-/**
+/*
  * Fixtures
  */
 
@@ -117,7 +117,7 @@ otherParagraphValences = ['negative', 'negative'];
 
 otherParagraphPolarities = [-5, -6];
 
-/**
+/*
  * Tests.
  */
 
@@ -316,7 +316,7 @@ describe('algorithm', function () {
             var not,
                 worried;
 
-            /**
+            /*
              * Replace the `worried` `Word` with a
              * `worried` `Symbol` emoji.
              */

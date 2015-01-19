@@ -4,7 +4,7 @@ var Retext,
     sentiment,
     gemoji;
 
-/**
+/*
  * Dependencies.
  */
 
@@ -12,7 +12,7 @@ Retext = require('retext');
 gemoji = require('gemoji');
 sentiment = require('./');
 
-/**
+/*
  * Dependencies.
  */
 
@@ -22,7 +22,7 @@ var retext,
 retext = new Retext();
 retextWithSentiment = new Retext().use(sentiment);
 
-/**
+/*
  * Fixtures.
  *
  * Source:
@@ -32,7 +32,7 @@ retextWithSentiment = new Retext().use(sentiment);
 var paragraph,
     sentimentParagraph;
 
-/**
+/*
  * A paragraph, 5 sentences, filled with 10 emojis.
  */
 
@@ -55,7 +55,7 @@ sentimentParagraph = 'Thou art a weird knight to so ' +
     'gone since ' + gemoji.name.man.emoji + ' does not ' +
     'choose to assume my fight.';
 
-/**
+/*
  * A paragraph, 5 sentences, without emojis.
  */
 
@@ -77,7 +77,7 @@ paragraph = 'Thou art a churlish knight to so affront ' +
     'Where she had stood was smurf, and she was gone ' +
     'since Sir Kay does not choose to assume my quarrel.';
 
-/**
+/*
  * Benchmark.
  */
 
