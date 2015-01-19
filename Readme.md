@@ -22,6 +22,12 @@ $ component install wooorm/retext-sentiment
 $ bower install retext-sentiment
 ```
 
+[Duo](http://duojs.org/#getting-started):
+
+```javascript
+var sentiment = require('wooorm/retext-sentiment');
+```
+
 ## Usage
 
 ```javascript
