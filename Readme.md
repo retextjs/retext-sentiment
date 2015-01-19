@@ -147,4 +147,4 @@ On a MacBook Air. **retext** works about 52% slower, when using **retext-sentime
 
 ## License
 
-MIT © [Titus Wormer](http://wooorm.com)
+[MIT](LICENSE) © [Titus Wormer](http://wooorm.com)
