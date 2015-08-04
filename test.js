@@ -1,121 +1,123 @@
 'use strict';
 
-var sentiment,
-    inspect,
-    content,
-    visit,
-    Retext,
-    assert;
+/* eslint-env mocha */
 
 /*
  * Dependencies.
  */
 
-sentiment = require('./');
-inspect = require('retext-inspect');
-content = require('retext-content');
-Retext = require('retext');
-visit = require('retext-visit');
-assert = require('assert');
+var assert = require('assert');
+var retext = require('retext');
+var visit = require('unist-util-visit');
+var sentiment = require('./');
 
 /*
- * Retext.
+ * Methods.
  */
 
-var retext;
-
-retext = new Retext()
-    .use(inspect)
-    .use(content)
-    .use(visit)
-    .use(sentiment);
+var equal = assert.equal;
 
 /*
- * Fixtures
+ * Fixtures.
  */
 
-var fixture,
-    otherWords,
-    valences,
-    polarities,
-    sentenceValences,
-    sentencePolarities,
-    paragraphValences,
-    paragraphPolarities,
-    otherValences,
-    otherPolarities,
-    otherSentenceValences,
-    otherSentencePolarities,
-    otherParagraphValences,
-    otherParagraphPolarities;
-
-fixture =
+var fixture =
     'Some positive, happy, cats. ' +
-    'Darn self-deluded, abandoned, dogs.\n' +
+    'Darn self-deluded, abandoned, dogs. ' +
     'Home Sweet Home Chicago! ' +
     'Feels good to be back. ' +
-    'Bad news though.';
+    'Bad news though. ' +
+    'This product is not bad at all. ' +
+    'Hai sexy! \ud83d\ude0f';
 
-valences = [
-    'neutral', 'positive', 'positive', 'neutral',
-    'neutral', 'negative', 'negative', 'neutral',
-    'neutral', 'positive', 'neutral', 'neutral',
-    'neutral', 'positive', 'neutral', 'neutral', 'neutral',
-    'negative', 'neutral', 'neutral'
+var inject = {
+    'cats': -3,
+    'dogs': 3
+};
+
+var wordValence = [
+    undefined,
+    'positive',
+    'positive',
+    'negative',
+    undefined,
+    'negative',
+    'negative',
+    'positive',
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    'positive',
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    'negative',
+    undefined,
+    undefined,
+    undefined,
+    'positive'
 ];
 
-polarities = [
-    0, 2, 3, 0,
-    0, -2, -2, 0,
-    0, 2, 0, 0,
-    0, 3, 0, 0, 0,
-    -3, 0, 0
+var wordPolarities = [
+    undefined,
+    2,
+    3,
+    -3,
+    undefined,
+    -2,
+    -2,
+    3,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    3,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    -3,
+    undefined,
+    undefined,
+    undefined,
+    3
 ];
 
-sentenceValences = [
-    'positive', 'negative',
-    'positive', 'positive', 'negative'
+var sentenceValences = [
+    'positive',
+    'negative',
+    'neutral',
+    'positive',
+    'neutral',
+    'positive',
+    'positive'
 ];
 
-sentencePolarities = [5, -4, 2, 3, -3];
-
-paragraphValences = ['positive', 'positive'];
-
-paragraphPolarities = [1, 2];
-
-otherWords = [
-    'Hate', 'to', 'wait', 'somewhere',
-    'I', 'still', 'feel', 'alone',
-    'I', 'hate', 'forgetting', 'book',
-    'sad', 'you', 'want', 'to', 'sleep',
-    'never', 'how', 'sad'
+var sentencePolarities = [
+    2,
+    -1,
+    0,
+    3,
+    0,
+    3,
+    6
 ];
-
-otherValences = [
-    'negative', 'neutral', 'neutral', 'neutral',
-    'neutral', 'neutral', 'neutral', 'negative',
-    'neutral', 'negative', 'neutral', 'neutral',
-    'negative', 'neutral', 'positive', 'neutral', 'neutral',
-    'neutral', 'neutral', 'negative'
-];
-
-otherPolarities = [
-    -3, 0, 0, 0,
-    0, 0, 0, -2,
-    0, -3, 0, 0,
-    -2, 0, 1, 0, 0,
-    0, 0, -2
-];
-
-otherSentenceValences = [
-    'negative', 'negative', 'negative', 'negative', 'negative'
-];
-
-otherSentencePolarities = [-3, -2, -3, -1, -2];
-
-otherParagraphValences = ['negative', 'negative'];
-
-otherParagraphPolarities = [-5, -6];
 
 /*
  * Tests.
@@ -125,242 +127,37 @@ describe('sentiment()', function () {
     var tree;
 
     before(function (done) {
-        retext.parse(fixture, function (err, node) {
-            tree = node;
+        retext.use(sentiment, inject).process(fixture, function (err, file) {
+            tree = file.namespace('retext').cst;
 
             done(err);
         });
     });
 
-    it('should be a `function`', function () {
-        assert(typeof sentiment === 'function');
-    });
-
-    it('should process each `WordNode`', function () {
+    it('should work', function () {
         var index = -1;
 
-        tree.visit(tree.WORD_NODE, function (wordNode) {
+        visit(tree, 'WordNode', function (node) {
+            var data = node.data || {};
+
             index++;
 
-            assert(wordNode.data.valence === valences[index]);
-            assert(wordNode.data.polarity === polarities[index]);
+            equal(data.valence, wordValence[index]);
+            equal(data.polarity, wordPolarities[index]);
         });
-    });
 
-    it('should process each `SentenceNode`', function () {
-        var index = -1;
+        index = -1;
 
-        tree.visit(tree.SENTENCE_NODE, function (sentenceNode) {
+        visit(tree, 'SentenceNode', function (node) {
             index++;
 
-            assert(
-                sentenceNode.data.valence === sentenceValences[index]
-            );
-            assert(
-                sentenceNode.data.polarity === sentencePolarities[index]
-            );
+            equal(node.data.valence, sentenceValences[index]);
+            equal(node.data.polarity, sentencePolarities[index]);
         });
-    });
 
-    it('should process each `ParagraphNode`', function () {
-        var index = -1;
-
-        tree.visit(tree.PARAGRAPH_NODE, function (paragraphNode) {
-            index++;
-
-            assert(
-                paragraphNode.data.valence === paragraphValences[index]
-            );
-            assert(
-                paragraphNode.data.polarity === paragraphPolarities[index]
-            );
-        });
-    });
-
-    it('should process the `RootNode`', function () {
-        assert(tree.data.valence === 'positive');
-        assert(tree.data.polarity === 3);
-    });
-
-    it('should set `polarity` to `0` and `valence` to `neutral` when a ' +
-        'word no longer has a value', function () {
-            tree.visit(tree.WORD_NODE, function (wordNode) {
-                wordNode.removeContent();
-                assert(wordNode.data.valence === 'neutral');
-                assert(wordNode.data.polarity === 0);
-            });
-        }
-    );
-
-    it('should set `polarity` to `0` and `valence` to `neutral` when ' +
-        'a sentence no longer has values', function () {
-            tree.visit(tree.SENTENCE_NODE, function (sentenceNode) {
-                assert(sentenceNode.data.valence === 'neutral');
-                assert(sentenceNode.data.polarity === 0);
-            });
-        }
-    );
-
-    it('should set `polarity` to `0` and `valence` to `neutral` when ' +
-        'a paragraph no longer has values', function () {
-            tree.visit(tree.PARAGRAPH_NODE, function (paragraphNode) {
-                assert(paragraphNode.data.valence === 'neutral');
-                assert(paragraphNode.data.polarity === 0);
-            });
-        }
-    );
-
-    it('should set `polarity` to `0` and `valence` to `neutral` when ' +
-        'a root no longer has values', function () {
-            assert(tree.data.valence === 'neutral');
-            assert(tree.data.polarity === 0);
-        }
-    );
-
-    it('should re-process a word when its value changes',
-        function () {
-            var index = -1;
-
-            tree.visit(tree.WORD_NODE, function (wordNode) {
-                index++;
-
-                wordNode.replaceContent(otherWords[index]);
-
-                assert(wordNode.data.valence === otherValences[index]);
-                assert(wordNode.data.polarity === otherPolarities[index]);
-            });
-        }
-    );
-
-    it('should re-process a sentence when its values change',
-        function () {
-            var index = -1;
-
-            tree.visit(tree.SENTENCE_NODE, function (sentenceNode) {
-                index++;
-
-                assert(
-                    sentenceNode.data.valence ===
-                    otherSentenceValences[index]
-                );
-                assert(
-                    sentenceNode.data.polarity ===
-                    otherSentencePolarities[index]
-                );
-            });
-        }
-    );
-
-    it('should re-process a paragraph when its values change',
-        function () {
-            var index = -1;
-
-            tree.visit(tree.PARAGRAPH_NODE, function (paragraphNode) {
-                index++;
-
-                assert(
-                    paragraphNode.data.valence ===
-                    otherParagraphValences[index]
-                );
-                assert(
-                    paragraphNode.data.polarity ===
-                    otherParagraphPolarities[index]
-                );
-            });
-        }
-    );
-
-    it('should re-process a root when its values change',
-        function () {
-            assert(tree.data.valence === 'negative');
-            assert(tree.data.polarity === -11);
-        }
-    );
-
-    it('should not fail when a node without valence is removed',
-        function () {
-            var headSentence = tree.head.head;
-            headSentence.remove();
-        }
-    );
-
-    it('should not fail when a word without valence is inserted',
-        function () {
-            tree.head.tail.append(new tree.TextOM.WordNode());
-        }
-    );
-});
-
-describe('algorithm', function () {
-    it('should support negation', function (done) {
-        retext.parse('This product is not bad at all.', function (err, tree) {
-            var not,
-                bad;
-
-            assert(tree.data.polarity === 3);
-            assert(tree.head.data.polarity === 3);
-            assert(tree.head.head.data.polarity === 3);
-
-            not = tree.head.head[6];
-            bad = tree.head.head[8];
-
-            assert(not.data.polarity === 0);
-            assert(bad.data.polarity === -3);
-
-            done(err);
-        });
-    });
-
-    it('should support negation on `Text` nodes', function (done) {
-        retext.parse('Not worried!', function (err, tree) {
-            var not,
-                worried;
-
-            /*
-             * Replace the `worried` `Word` with a
-             * `worried` `Symbol` emoji.
-             */
-
-            tree.head.head[2].replace(
-                new tree.TextOM.SymbolNode('\ud83d\ude1f')
-            );
-
-            assert(tree.data.polarity === 4);
-            assert(tree.head.data.polarity === 4);
-            assert(tree.head.head.data.polarity === 4);
-
-            not = tree.head.head[0];
-            worried = tree.head.head[2];
-
-            assert(not.data.polarity === 0);
-            assert(worried.data.polarity === -4);
-
-            done(err);
-        });
-    });
-});
-
-describe('inject', function () {
-    it('should support injection', function (done) {
-        var customRetext;
-
-        customRetext = new Retext()
-            .use(inspect)
-            .use(content)
-            .use(visit)
-            .use(sentiment, {
-                'dog': 3,
-                'cat': -3
-            });
-
-        customRetext.parse('Cat and dog', function (err, tree) {
-            assert(tree.data.polarity === 0);
-            assert(tree.head.data.polarity === 0);
-            assert(tree.head.head.data.polarity === 0);
-            assert(tree.head.head.head.data.polarity === -3);
-            assert(tree.head.head.tail.data.polarity === 3);
-
-            done(err);
-        });
+        equal(tree.children[0].data.valence, 'positive');
+        equal(tree.children[0].data.polarity, 13);
+        equal(tree.data.valence, 'positive');
+        equal(tree.data.polarity, 13);
     });
 });

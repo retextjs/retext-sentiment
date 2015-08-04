@@ -4,25 +4,17 @@
  * Dependencies.
  */
 
-var afinn,
-    emojiEmotion,
-    emoticons,
-    gemoji,
-    fs;
-
-afinn = require('afinn-111');
-emojiEmotion = require('emoji-emotion');
-emoticons = require('emoticon');
-gemoji = require('gemoji');
-fs = require('fs');
+var fs = require('fs');
+var afinn = require('afinn-111');
+var emojiEmotion = require('emoji-emotion');
+var emoticons = require('emoticon');
+var gemoji = require('gemoji');
 
 /*
  * Data.
  */
 
-var list;
-
-list = {};
+var list = {};
 
 /*
  * Add `afinn`.

@@ -1,36 +1,41 @@
+/**
+ * @author Titus Wormer
+ * @copyright 2014-2015 Titus Wormer
+ * @license MIT
+ * @module retext:sentiment
+ * @fileoverview Detect the sentiment of text with Retext.
+ */
+
 'use strict';
 
 /*
  * Dependencies.
  */
 
-var polarities,
-    visit;
+var visit = require('unist-util-visit');
+var nlcstToString = require('nlcst-to-string');
+var polarities = require('./data/data.json');
 
-polarities = require('./data/data.json');
-visit = require('retext-visit');
+/*
+ * Methods.
+ */
+
+var has = Object.prototype.hasOwnProperty;
 
 /*
  * Constants.
  */
 
-var has,
-    NEUTRAL,
-    POSITIVE,
-    NEGATIVE;
-
-has = Object.prototype.hasOwnProperty;
-
-NEUTRAL = 'neutral';
-POSITIVE = 'positive';
-NEGATIVE = 'negative';
+var NEUTRAL = 'neutral';
+var POSITIVE = 'positive';
+var NEGATIVE = 'negative';
 
 /**
  * Classify, from a given `polarity` between `-5` and
  * `5`, if the polarity is `NEGATIVE` (negative),
  * `NEUTRAL` (0), or `POSITIVE` (positive).
  *
- * @param {number} polarity
+ * @param {number} polarity - Polarity to classify.
  * @return {string}
  */
 function classify(polarity) {
@@ -40,13 +45,13 @@ function classify(polarity) {
 /**
  * Detect if a value is used to negate something
  *
- * @param {Node} node
+ * @param {Node} node - Node to check.
  * @return {boolean}
  */
 function isNegation(node) {
     var value;
 
-    value = node.toString().toLowerCase();
+    value = nlcstToString(node).toLowerCase();
 
     if (
         value === 'not' ||
@@ -61,129 +66,163 @@ function isNegation(node) {
 }
 
 /**
- * Handler for a polarity change in a `parent`.
+ * Patch a `polarity` and valence property on `node`s.
  *
- * @param {Parent} parent
+ * @param {NLCSTNode} node - Node.
+ * @param {number} polarity - Positiveness or negativness.
  */
-function onchangeinparent(parent) {
-    var polarity,
-        hasNegation,
-        node;
+function patch(node, polarity) {
+    var data = node.data || {};
 
-    if (!parent) {
-        return;
-    }
+    data.polarity = polarity || 0;
+    data.valence = classify(polarity);
 
-    polarity = 0;
-
-    node = parent.head;
-
-    while (node) {
-        /*
-         * Add the polarity. If the previous word,
-         * contained negation, negate the polarity.
-         */
-
-        if (node.data.polarity) {
-            polarity += (hasNegation ? -1 : 1) * node.data.polarity;
-        }
-
-        /*
-         * If the value is a word, remove any present
-         * negation. Otherwise, add negation if the
-         * node contains it.
-         */
-
-        if (node.type === node.WORD_NODE) {
-            if (hasNegation) {
-                hasNegation = false;
-            } else if (isNegation(node)) {
-                hasNegation = true;
-            }
-        }
-
-        node = node.next;
-    }
-
-    parent.data.polarity = polarity;
-    parent.data.valence = classify(polarity);
-
-    onchangeinparent(parent.parent);
+    node.data = data;
 }
 
 /**
- * Factory to create a bound `onchange` method.
+ * Factory to patch absed on the bound `config`.
  *
- * @param {Object?} inject
- * @return {function(this:Node)}
+ * @param {Object} config - Node.
  */
-function onchangeFactory(inject) {
+function any(config) {
     /**
-     * Handler for a value change in a `node`.
+     * Patch data-properties on `node`s with a value and words.
      *
-     * @this {Node}
+     * @param {NLCSTNode} node - Node.
      */
-    return function () {
-        var self,
-            data,
-            polarity,
-            value;
+    return function (node) {
+        var value;
+        var polarity;
 
-        self = this;
-        data = self.data;
-        polarity = 0;
-        value = self.toString().toLowerCase();
+        if ('value' in node || node.type === 'WordNode') {
+            value = nlcstToString(node);
 
-        if (inject && has.call(inject, value)) {
-            polarity = inject[value];
-        } else if (has.call(polarities, value)) {
-            polarity = polarities[value];
+            if (config && has.call(config, value)) {
+                polarity = config[value];
+            } else if (has.call(polarities, value)) {
+                polarity = polarities[value];
+            }
+
+            if (polarity) {
+                patch(node, polarity);
+            }
         }
-
-        data.polarity = polarity;
-        data.valence = classify(polarity);
-
-        onchangeinparent(self.parent);
     };
 }
 
 /**
- * Define `onrun`.
+ * Factory to gather parents and patch them based on their
+ * childrens directionality.
  *
- * @param {Node} tree
+ * @return {function(node, index, parent)} - Can be passed
+ *   to `visit`.
  */
-function onrun(tree) {
-    tree.visit(tree.SENTENCE_NODE, function (sentenceNode) {
-        onchangeinparent(sentenceNode.parent);
-    });
+function concatenateFactory() {
+    var queue = [];
+
+    /**
+     * Gather a parent if not already gathered.
+     *
+     * @param {NLCSTWordNode} node - Word.
+     * @param {number} index - Position of `node` in
+     *   `parent`.
+     * @param {NLCSTParentNode} parent - Parent of `child`.
+     */
+    function concatenate(node, index, parent) {
+        if (
+            parent &&
+            parent.type !== 'WordNode' &&
+            queue.indexOf(parent) === -1
+        ) {
+            queue.push(parent);
+        }
+    }
+
+    /**
+     * Patch all words in `parent`.
+     *
+     * @param {NLCSTParentNode} node - Parent
+     */
+    function one(node) {
+        var children = node.children;
+        var length = children.length;
+        var polarity = 0;
+        var index = -1;
+        var child;
+        var hasNegation;
+
+        while (++index < length) {
+            child = children[index];
+
+            if (child.data && child.data.polarity) {
+                polarity += (hasNegation ? -1 : 1) * child.data.polarity;
+            }
+
+            /*
+             * If the value is a word, remove any present
+             * negation. Otherwise, add negation if the
+             * node contains it.
+             */
+
+            if (child.type === 'WordNode') {
+                if (hasNegation) {
+                    hasNegation = false;
+                } else if (isNegation(child)) {
+                    hasNegation = true;
+                }
+            }
+        }
+
+        patch(node, polarity);
+    }
+
+    /**
+     * Patch all parents.
+     */
+    function done() {
+        var length = queue.length;
+        var index = -1;
+
+        queue.reverse();
+
+        while (++index < length) {
+            one(queue[index]);
+        }
+    }
+
+    concatenate.done = done;
+
+    return concatenate;
 }
 
 /**
- * Define `sentiment`.
+ * Define.
  *
- * @param {Retext} retext
- * @return {Function} - See `onrun`.
+ * @return {Function} - `transformer`.
  */
-function sentiment(retext, inject) {
-    var TextOM,
-        onchange;
+function attacher(retext, options) {
+    /**
+     * Patch `polarity` and `valence` properties on nodes
+     * with a value and word-nodes. Then, patch the same
+     * properties on their parents.
+     *
+     * @param {NLCSTNode} node - Syntax tree.
+     */
+    function transformer(node) {
+        var concatenate = concatenateFactory();
 
-    TextOM = retext.TextOM;
+        visit(node, any(options));
+        visit(node, concatenate);
 
-    retext.use(visit);
+        concatenate.done();
+    }
 
-    onchange = onchangeFactory(inject);
-
-    TextOM.Text.on('insert', onchange);
-    TextOM.WordNode.on('insert', onchange);
-
-    TextOM.Node.on('remove', onchangeinparent);
-
-    return onrun;
+    return transformer;
 }
 
 /*
- * Expose `sentiment`.
+ * Expose.
  */
 
-module.exports = sentiment;
+module.exports = attacher;

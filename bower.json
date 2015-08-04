@@ -1,6 +1,6 @@
 {
   "name": "retext-sentiment",
-  "main": "index.js",
+  "main": "retext-sentiment.js",
   "description": "Detect the sentiment of text with Retext",
   "license": "MIT",
   "keywords": [
@@ -19,9 +19,6 @@
     "guess",
     "retext"
   ],
-  "dependencies": {
-    "retext-visit": "^0.2.2"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/wooorm/retext-sentiment.git"

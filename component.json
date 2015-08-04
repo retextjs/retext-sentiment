@@ -20,13 +20,11 @@
     "retext"
   ],
   "dependencies": {
-    "wooorm/retext-visit": "^0.2.2"
+    "wooorm/unist-util-visit": "^1.0.0",
+    "wooorm/nlcst-to-string": "~0.1.5"
   },
   "repository": "wooorm/retext-sentiment",
   "scripts": [
     "index.js"
-  ],
-  "json": [
-    "data/data.json"
   ]
 }
