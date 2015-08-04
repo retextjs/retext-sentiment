@@ -4,6 +4,11 @@
 
 <!--lint disable maximum-line-length-->
 
+1.0.0 / 2015-08-04
+==================
+
+*   Refactor api for retext@1.0.0 ([abac21c](https://github.com/wooorm/retext-sentiment/commit/abac21c))
+
 0.4.2 / 2015-01-19
 ==================
 
