@@ -1,21 +1,22 @@
+/**
+ * @author Titus Wormer
+ * @copyright 2014 Titus Wormer
+ * @license MIT
+ * @module retext:sentiment
+ * @fileoverview Test suite for `retext-sentiment`.
+ */
+
 'use strict';
 
-/* eslint-env mocha */
+/* eslint-env node */
+/* jscs:disable jsDoc */
+/* jscs:disable maximumLineLength */
 
-/*
- * Dependencies.
- */
-
-var assert = require('assert');
-var retext = require('retext');
+/* Dependencies. */
+var test = require('tape');
 var visit = require('unist-util-visit');
+var retext = require('retext');
 var sentiment = require('./');
-
-/*
- * Methods.
- */
-
-var equal = assert.equal;
 
 /*
  * Fixtures.
@@ -31,8 +32,8 @@ var fixture =
     'Hai sexy! \ud83d\ude0f';
 
 var inject = {
-    'cats': -3,
-    'dogs': 3
+    cats: -3,
+    dogs: 3
 };
 
 var wordValence = [
@@ -123,41 +124,35 @@ var sentencePolarities = [
  * Tests.
  */
 
-describe('sentiment()', function () {
-    var tree;
+test('sentiment()', function (t) {
+    var processor = retext().use(sentiment, inject);
+    var tree = processor.parse(fixture);
+    var index = -1;
 
-    before(function (done) {
-        retext.use(sentiment, inject).process(fixture, function (err, file) {
-            tree = file.namespace('retext').cst;
+    processor.run(tree);
 
-            done(err);
-        });
+    visit(tree, 'WordNode', function (node) {
+        var data = node.data || {};
+
+        index++;
+
+        t.equal(data.valence, wordValence[index]);
+        t.equal(data.polarity, wordPolarities[index]);
     });
 
-    it('should work', function () {
-        var index = -1;
+    index = -1;
 
-        visit(tree, 'WordNode', function (node) {
-            var data = node.data || {};
+    visit(tree, 'SentenceNode', function (node) {
+        index++;
 
-            index++;
-
-            equal(data.valence, wordValence[index]);
-            equal(data.polarity, wordPolarities[index]);
-        });
-
-        index = -1;
-
-        visit(tree, 'SentenceNode', function (node) {
-            index++;
-
-            equal(node.data.valence, sentenceValences[index]);
-            equal(node.data.polarity, sentencePolarities[index]);
-        });
-
-        equal(tree.children[0].data.valence, 'positive');
-        equal(tree.children[0].data.polarity, 13);
-        equal(tree.data.valence, 'positive');
-        equal(tree.data.polarity, 13);
+        t.equal(node.data.valence, sentenceValences[index]);
+        t.equal(node.data.polarity, sentencePolarities[index]);
     });
+
+    t.equal(tree.children[0].data.valence, 'positive');
+    t.equal(tree.children[0].data.polarity, 13);
+    t.equal(tree.data.valence, 'positive');
+    t.equal(tree.data.polarity, 13);
+
+    t.end();
 });

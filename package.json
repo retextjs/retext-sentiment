@@ -19,53 +19,52 @@
     "guess",
     "retext"
   ],
-  "dependencies": {
-    "nlcst-to-string": "^0.1.5",
-    "unist-util-visit": "^1.0.0"
-  },
   "files": [
-    "data/data.json",
     "index.js"
   ],
   "repository": {
     "type": "git",
     "url": "https://github.com/wooorm/retext-sentiment.git"
   },
-  "author": "Titus Wormer <tituswormer@gmail.com>",
+  "bugs": "https://github.com/wooorm/retext-sentiment/issues",
+  "author": "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)",
+  "contributors": [
+    "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)"
+  ],
+  "dependencies": {
+    "nlcst-to-string": "^2.0.0",
+    "unist-util-visit": "^1.0.0"
+  },
   "devDependencies": {
     "afinn-111": "^0.1.5",
-    "browserify": "^11.0.1",
-    "chalk": "^1.0.0",
+    "browserify": "^13.0.1",
     "emoji-emotion": "^0.1.1",
-    "emoticon": "^0.1.0",
-    "eslint": "^1.0.0",
+    "emoticon": "^1.0.0",
+    "eslint": "^2.0.0",
     "esmangle": "^1.0.1",
-    "gemoji": "^0.2.2",
-    "istanbul": "^0.3.0",
-    "jscs": "^2.0.0",
-    "jscs-jsdoc": "^1.0.0",
-    "mdast": "^0.28.0",
-    "mdast-comment-config": "^0.1.2",
-    "mdast-github": "^0.3.2",
-    "mdast-lint": "^0.4.2",
-    "mdast-slug": "^0.1.1",
-    "mdast-validate-links": "^0.3.1",
-    "mocha": "^2.0.0",
-    "retext": "^1.0.0-rc.2"
+    "gemoji": "^1.0.0",
+    "istanbul": "^0.4.0",
+    "jscs": "^3.0.0",
+    "jscs-jsdoc": "^2.0.0",
+    "remark-cli": "^1.0.0",
+    "remark-comment-config": "^4.0.0",
+    "remark-github": "^5.0.0",
+    "remark-lint": "^4.0.0",
+    "remark-validate-links": "^4.0.0",
+    "retext": "^3.0.0",
+    "tape": "^4.0.0"
   },
   "scripts": {
-    "test-api": "mocha --check-leaks test.js",
-    "test-coverage": "istanbul cover _mocha -- test.js",
-    "test-travis": "npm run test-coverage",
-    "test": "npm run test-api",
+    "build-list": "node script/build-list.js",
+    "build-md": "remark . --quiet --frail",
+    "build-bundle": "browserify index.js --bare -s retextSentiment > retext-sentiment.js",
+    "build-mangle": "esmangle retext-sentiment.js > retext-sentiment.min.js",
+    "build": "npm run build-list && npm run build-md && npm run build-bundle && npm run build-mangle",
     "lint-api": "eslint .",
     "lint-style": "jscs --reporter inline .",
     "lint": "npm run lint-api && npm run lint-style",
-    "make": "npm run lint && npm run test-coverage",
-    "build-list": "node script/build-list.js",
-    "build-bundle": "browserify index.js --ignore-missing --no-builtins --standalone retextPOS > retext-sentiment.js",
-    "postbuild-bundle": "esmangle retext-sentiment.js > retext-sentiment.min.js",
-    "build-md": "mdast . --quiet",
-    "build": "npm run build-list && npm run build-bundle && npm run build-md"
+    "test-api": "node test.js",
+    "test-coverage": "istanbul cover test.js",
+    "test": "npm run build && npm run lint && npm run test-coverage"
   }
 }

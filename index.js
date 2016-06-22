@@ -1,6 +1,6 @@
 /**
  * @author Titus Wormer
- * @copyright 2014-2015 Titus Wormer
+ * @copyright 2014 Titus Wormer
  * @license MIT
  * @module retext:sentiment
  * @fileoverview Detect the sentiment of text with Retext.
@@ -8,24 +8,17 @@
 
 'use strict';
 
-/*
- * Dependencies.
- */
+/* eslint-env commonjs */
 
+/* Dependencies. */
 var visit = require('unist-util-visit');
 var nlcstToString = require('nlcst-to-string');
-var polarities = require('./data/data.json');
+var polarities = require('./index.json');
 
-/*
- * Methods.
- */
-
+/* Methods. */
 var has = Object.prototype.hasOwnProperty;
 
-/*
- * Constants.
- */
-
+/* Constants. */
 var NEUTRAL = 'neutral';
 var POSITIVE = 'positive';
 var NEGATIVE = 'negative';
@@ -36,7 +29,7 @@ var NEGATIVE = 'negative';
  * `NEUTRAL` (0), or `POSITIVE` (positive).
  *
  * @param {number} polarity - Polarity to classify.
- * @return {string}
+ * @return {string} - Classification.
  */
 function classify(polarity) {
     return polarity > 0 ? POSITIVE : polarity < 0 ? NEGATIVE : NEUTRAL;
@@ -46,7 +39,7 @@ function classify(polarity) {
  * Detect if a value is used to negate something
  *
  * @param {Node} node - Node to check.
- * @return {boolean}
+ * @return {boolean} - Whether `node` negates.
  */
 function isNegation(node) {
     var value;
@@ -159,12 +152,9 @@ function concatenateFactory() {
                 polarity += (hasNegation ? -1 : 1) * child.data.polarity;
             }
 
-            /*
-             * If the value is a word, remove any present
+            /* If the value is a word, remove any present
              * negation. Otherwise, add negation if the
-             * node contains it.
-             */
-
+             * node contains it. */
             if (child.type === 'WordNode') {
                 if (hasNegation) {
                     hasNegation = false;
@@ -197,11 +187,13 @@ function concatenateFactory() {
 }
 
 /**
- * Define.
+ * Attacher.
  *
+ * @param {Unified} processor - Processor.
+ * @param {Object?} [options] - Configuration.
  * @return {Function} - `transformer`.
  */
-function attacher(retext, options) {
+function attacher(processor, options) {
     /**
      * Patch `polarity` and `valence` properties on nodes
      * with a value and word-nodes. Then, patch the same
@@ -221,8 +213,5 @@ function attacher(retext, options) {
     return transformer;
 }
 
-/*
- * Expose.
- */
-
+/* Expose. */
 module.exports = attacher;

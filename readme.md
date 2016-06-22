@@ -1,20 +1,19 @@
-# retext-sentiment [![Build Status](https://img.shields.io/travis/wooorm/retext-sentiment.svg)](https://travis-ci.org/wooorm/retext-sentiment) [![Coverage Status](https://img.shields.io/codecov/c/github/wooorm/retext-sentiment.svg)](https://codecov.io/github/wooorm/retext-sentiment)
+# retext-sentiment [![Build Status][travis-badge]][travis] [![Coverage Status][codecov-badge]][codecov]
 
-Sentiment detection with [**Retext**](https://github.com/wooorm/retext).
+<!--lint disable heading-increment list-item-spacing-->
+
+Sentiment detection with [**retext**][retext].
 
 ## Installation
 
-[npm](https://docs.npmjs.com/cli/install):
+[npm][npm-install]:
 
 ```bash
 npm install retext-sentiment
 ```
 
-**retext-sentiment** is also available for [bower](http://bower.io/#install-packages),
-[component](https://github.com/componentjs/component), and
-[duo](http://duojs.org/#getting-started), and as an AMD, CommonJS, and globals
-module, [uncompressed](retext-sentiment.js) and
-[compressed](retext-sentiment.min.js).
+**retext-sentiment** is also available as an AMD, CommonJS, and
+globals module, [uncompressed and compressed][releases].
 
 ## Usage
 
@@ -134,42 +133,62 @@ RootNode[1] [data={"polarity":6,"valence":"positive"}]
 
 ## API
 
-### [retext](https://github.com/wooorm/retext#api)\.[use](https://github.com/wooorm/retext#retextuseplugin-options)([sentiment](#api)\[, options\])
+### `retext().use(sentiment[, options])`
 
-```javascript
-retext().use(sentiment, {
-    'cat': -3,
-    'dog': 3
-});
-```
+**retext-sentiment** automatically detects the sentiment of each
+[`Text`][text] / [`WordNode`][word] (using [`wooorm/afinn-111`][afinn]
+and [`wooorm/emoji-emotion`][emoticon]), and stores the valence in
+`node.data.valence`, and polarity in `node.data.polarity`.
 
-**retext-sentiment** automatically detects the sentiment of each [`Text`](https://github.com/wooorm/nlcst#text)/[`WordNode`](https://github.com/wooorm/nlcst#wordnode) (using [**wooorm/afinn-111**](https://github.com/wooorm/afinn-111) and [**wooorm/emoji-emotion**](https://github.com/wooorm/emoji-emotion)), and
-stores the valence in `node.data.valence`, and polarity in `node.data.polarity`.
+Valence?  Either `"neutral"`, `"positive"`, or `"negative"`.  Polarity?
+A number between `-5` and `5` (both including).
 
-Valence? Either `"neutral"`, `"positive"`, or `"negative"`. Polarity? A number
-between `-5` and `5` (both including).
+In addition, the plugin exposes a calculated sentiment on parents
+(sentences, paragraphs, and root nodes), through the same `valence`
+and `polarity` properties.  This calculated sentiment includes negation,
+so a word such as `bad`, with a polarity of `-3`, is calculated as `3`
+when preceded by a word such as `not`, `neither`, `nor`, or a word ending
+in `n't`.
 
-In addition, the plugin exposes a calculated sentiment on parents (sentences,
-paragraphs, and root nodes), through the same `valence` and `polarity`
-properties.
-This calculated sentiment includes negation, so a word such as `bad`, with a
-polarity of `-3`, is calculated as `3` when preceded by a word such as `not`,
-`neither`, `nor`, or a word ending in `n't`.
+###### `options`
 
-**Parameters**:
+*   `inject` (`Object`, optional) — Mapping strings (words, other
+    symbols) to numbers.  Used to insert custom values, or overwrite
+    existing values with new weights.
 
-*   `sentiment` — This module;
+## Support
 
-*   `inject` (`Object`, optional) — Mapping strings (words, other symbols)
-    to numbers. Used to insert custom values, or overwrite existing values with
-    new weights.
-
-## Supported Words
-
-**retext-sentiment** supports all [**wooorm/afinn-111**](https://github.com/wooorm/afinn-111#supported-words)
-words and [**wooorm/emoji-emotion**](https://github.com/wooorm/emoji-emotion#supported-emoji)
-emoji/gemoji.
+**retext-sentiment** supports all [`wooorm/afinn-111`][afinn] words
+and [`wooorm/emoji-emotion`][emoticon] emoji / gemoji.
 
 ## License
 
-[MIT](LICENSE) © [Titus Wormer](http://wooorm.com)
+[MIT][license] © [Titus Wormer][author]
+
+<!-- Definitions -->
+
+[travis-badge]: https://img.shields.io/travis/wooorm/retext-sentiment.svg
+
+[travis]: https://travis-ci.org/wooorm/retext-sentiment
+
+[codecov-badge]: https://img.shields.io/codecov/c/github/wooorm/retext-sentiment.svg
+
+[codecov]: https://codecov.io/github/wooorm/retext-sentiment
+
+[npm-install]: https://docs.npmjs.com/cli/install
+
+[releases]: https://github.com/wooorm/retext-sentiment/releases
+
+[license]: LICENSE
+
+[author]: http://wooorm.com
+
+[retext]: https://github.com/wooorm/retext
+
+[text]: https://github.com/wooorm/nlcst#text
+
+[word]: https://github.com/wooorm/nlcst#wordnode
+
+[afinn]: https://github.com/wooorm/afinn-111
+
+[emoticon]: https://github.com/wooorm/emoji-emotion

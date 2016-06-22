@@ -1,6 +1,3 @@
-build/
-components/
 coverage/
-build.js
 retext-sentiment.js
 retext-sentiment.min.js
