@@ -1,19 +1,14 @@
 # retext-sentiment [![Build Status][travis-badge]][travis] [![Coverage Status][codecov-badge]][codecov]
 
-<!--lint disable heading-increment list-item-spacing-->
-
 Sentiment detection with [**retext**][retext].
 
 ## Installation
 
-[npm][npm-install]:
+[npm][]:
 
 ```bash
 npm install retext-sentiment
 ```
-
-**retext-sentiment** is also available as an AMD, CommonJS, and
-globals module, [uncompressed and compressed][releases].
 
 ## Usage
 
@@ -175,9 +170,7 @@ and [`wooorm/emoji-emotion`][emoticon] emoji / gemoji.
 
 [codecov]: https://codecov.io/github/wooorm/retext-sentiment
 
-[npm-install]: https://docs.npmjs.com/cli/install
-
-[releases]: https://github.com/wooorm/retext-sentiment/releases
+[npm]: https://docs.npmjs.com/cli/install
 
 [license]: LICENSE
 

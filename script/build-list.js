@@ -15,30 +15,30 @@ var list = {};
 
 /* Add `afinn`. */
 Object.keys(afinn).sort().forEach(function (key) {
-    list[key] = afinn[key];
+  list[key] = afinn[key];
 });
 
 /* Add `emoji-emotion` as unicode emoji. */
 emojiEmotion.forEach(function (info) {
-    list[info.emoji] = info.polarity;
+  list[info.emoji] = info.polarity;
 });
 
 /* Add `emoji-emotion` as gemoji. */
 emojiEmotion.forEach(function (info) {
-    list[':' + gemoji.unicode[info.emoji].name + ':'] = info.polarity;
+  list[':' + gemoji.unicode[info.emoji].name + ':'] = info.polarity;
 });
 
 /* Add `emoji-emotion` as gemoji. */
 emojiEmotion.forEach(function (info) {
-    if (info.emoji in emoticons.unicode) {
-        emoticons.unicode[info.emoji].emoticons.forEach(function (emoticon) {
-            list[emoticon] = info.polarity;
-        });
-    }
+  if (info.emoji in emoticons.unicode) {
+    emoticons.unicode[info.emoji].emoticons.forEach(function (emoticon) {
+      list[emoticon] = info.polarity;
+    });
+  }
 });
 
 /* Write. */
 fs.writeFileSync(
-    path.join('index.json'),
-    JSON.stringify(list, null, 2) + '\n'
+  path.join('index.json'),
+  JSON.stringify(list, null, 2) + '\n'
 );

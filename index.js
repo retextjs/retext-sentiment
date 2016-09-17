@@ -8,15 +8,14 @@
 
 'use strict';
 
-/* eslint-env commonjs */
-
 /* Dependencies. */
+var has = require('has');
 var visit = require('unist-util-visit');
 var nlcstToString = require('nlcst-to-string');
 var polarities = require('./index.json');
 
-/* Methods. */
-var has = Object.prototype.hasOwnProperty;
+/* Expose. */
+module.exports = attacher;
 
 /* Constants. */
 var NEUTRAL = 'neutral';
@@ -24,84 +23,30 @@ var POSITIVE = 'positive';
 var NEGATIVE = 'negative';
 
 /**
- * Classify, from a given `polarity` between `-5` and
- * `5`, if the polarity is `NEGATIVE` (negative),
- * `NEUTRAL` (0), or `POSITIVE` (positive).
+ * Attacher.
  *
- * @param {number} polarity - Polarity to classify.
- * @return {string} - Classification.
+ * @param {Unified} processor - Processor.
+ * @param {Object?} [options] - Configuration.
+ * @return {Function} - `transformer`.
  */
-function classify(polarity) {
-    return polarity > 0 ? POSITIVE : polarity < 0 ? NEGATIVE : NEUTRAL;
-}
+function attacher(processor, options) {
+  return transformer;
 
-/**
- * Detect if a value is used to negate something
- *
- * @param {Node} node - Node to check.
- * @return {boolean} - Whether `node` negates.
- */
-function isNegation(node) {
-    var value;
+  /**
+   * Patch `polarity` and `valence` properties on nodes
+   * with a value and word-nodes. Then, patch the same
+   * properties on their parents.
+   *
+   * @param {NLCSTNode} node - Syntax tree.
+   */
+  function transformer(node) {
+    var concatenate = concatenateFactory();
 
-    value = nlcstToString(node).toLowerCase();
+    visit(node, any(options));
+    visit(node, concatenate);
 
-    if (
-        value === 'not' ||
-        value === 'neither' ||
-        value === 'nor' ||
-        /n['’]t/.test(value)
-    ) {
-        return true;
-    }
-
-    return false;
-}
-
-/**
- * Patch a `polarity` and valence property on `node`s.
- *
- * @param {NLCSTNode} node - Node.
- * @param {number} polarity - Positiveness or negativness.
- */
-function patch(node, polarity) {
-    var data = node.data || {};
-
-    data.polarity = polarity || 0;
-    data.valence = classify(polarity);
-
-    node.data = data;
-}
-
-/**
- * Factory to patch absed on the bound `config`.
- *
- * @param {Object} config - Node.
- */
-function any(config) {
-    /**
-     * Patch data-properties on `node`s with a value and words.
-     *
-     * @param {NLCSTNode} node - Node.
-     */
-    return function (node) {
-        var value;
-        var polarity;
-
-        if ('value' in node || node.type === 'WordNode') {
-            value = nlcstToString(node);
-
-            if (config && has.call(config, value)) {
-                polarity = config[value];
-            } else if (has.call(polarities, value)) {
-                polarity = polarities[value];
-            }
-
-            if (polarity) {
-                patch(node, polarity);
-            }
-        }
-    };
+    concatenate.done();
+  }
 }
 
 /**
@@ -112,106 +57,163 @@ function any(config) {
  *   to `visit`.
  */
 function concatenateFactory() {
-    var queue = [];
+  var queue = [];
 
-    /**
-     * Gather a parent if not already gathered.
-     *
-     * @param {NLCSTWordNode} node - Word.
-     * @param {number} index - Position of `node` in
-     *   `parent`.
-     * @param {NLCSTParentNode} parent - Parent of `child`.
-     */
-    function concatenate(node, index, parent) {
-        if (
-            parent &&
-            parent.type !== 'WordNode' &&
-            queue.indexOf(parent) === -1
-        ) {
-            queue.push(parent);
+  concatenate.done = done;
+
+  return concatenate;
+
+  /**
+   * Gather a parent if not already gathered.
+   *
+   * @param {NLCSTWordNode} node - Word.
+   * @param {number} index - Position of `node` in
+   *   `parent`.
+   * @param {NLCSTParentNode} parent - Parent of `child`.
+   */
+  function concatenate(node, index, parent) {
+    if (
+      parent &&
+      parent.type !== 'WordNode' &&
+      queue.indexOf(parent) === -1
+    ) {
+      queue.push(parent);
+    }
+  }
+
+  /**
+   * Patch all words in `parent`.
+   *
+   * @param {NLCSTParentNode} node - Parent
+   */
+  function one(node) {
+    var children = node.children;
+    var length = children.length;
+    var polarity = 0;
+    var index = -1;
+    var child;
+    var hasNegation;
+
+    while (++index < length) {
+      child = children[index];
+
+      if (child.data && child.data.polarity) {
+        polarity += (hasNegation ? -1 : 1) * child.data.polarity;
+      }
+
+      /* If the value is a word, remove any present
+       * negation. Otherwise, add negation if the
+       * node contains it. */
+      if (child.type === 'WordNode') {
+        if (hasNegation) {
+          hasNegation = false;
+        } else if (isNegation(child)) {
+          hasNegation = true;
         }
+      }
     }
 
-    /**
-     * Patch all words in `parent`.
-     *
-     * @param {NLCSTParentNode} node - Parent
-     */
-    function one(node) {
-        var children = node.children;
-        var length = children.length;
-        var polarity = 0;
-        var index = -1;
-        var child;
-        var hasNegation;
+    patch(node, polarity);
+  }
 
-        while (++index < length) {
-            child = children[index];
+  /**
+   * Patch all parents.
+   */
+  function done() {
+    var length = queue.length;
+    var index = -1;
 
-            if (child.data && child.data.polarity) {
-                polarity += (hasNegation ? -1 : 1) * child.data.polarity;
-            }
+    queue.reverse();
 
-            /* If the value is a word, remove any present
-             * negation. Otherwise, add negation if the
-             * node contains it. */
-            if (child.type === 'WordNode') {
-                if (hasNegation) {
-                    hasNegation = false;
-                } else if (isNegation(child)) {
-                    hasNegation = true;
-                }
-            }
-        }
-
-        patch(node, polarity);
+    while (++index < length) {
+      one(queue[index]);
     }
-
-    /**
-     * Patch all parents.
-     */
-    function done() {
-        var length = queue.length;
-        var index = -1;
-
-        queue.reverse();
-
-        while (++index < length) {
-            one(queue[index]);
-        }
-    }
-
-    concatenate.done = done;
-
-    return concatenate;
+  }
 }
 
 /**
- * Attacher.
+ * Factory to patch based on the bound `config`.
  *
- * @param {Unified} processor - Processor.
- * @param {Object?} [options] - Configuration.
- * @return {Function} - `transformer`.
+ * @param {Object} config - Node.
  */
-function attacher(processor, options) {
-    /**
-     * Patch `polarity` and `valence` properties on nodes
-     * with a value and word-nodes. Then, patch the same
-     * properties on their parents.
-     *
-     * @param {NLCSTNode} node - Syntax tree.
-     */
-    function transformer(node) {
-        var concatenate = concatenateFactory();
+function any(config) {
+  return setter;
 
-        visit(node, any(options));
-        visit(node, concatenate);
+  /**
+   * Patch data-properties on `node`s with a value and words.
+   *
+   * @param {NLCSTNode} node - Node.
+   */
+  function setter(node) {
+    var value;
+    var polarity;
 
-        concatenate.done();
+    if ('value' in node || node.type === 'WordNode') {
+      value = nlcstToString(node);
+
+      if (config && has(config, value)) {
+        polarity = config[value];
+      } else if (has(polarities, value)) {
+        polarity = polarities[value];
+      }
+
+      if (polarity) {
+        patch(node, polarity);
+      }
     }
-
-    return transformer;
+  }
 }
 
-/* Expose. */
-module.exports = attacher;
+/**
+ * Patch a `polarity` and valence property on `node`s.
+ *
+ * @param {NLCSTNode} node - Node.
+ * @param {number} polarity - Positiveness or negativness.
+ */
+function patch(node, polarity) {
+  var data = node.data || {};
+
+  data.polarity = polarity || 0;
+  data.valence = classify(polarity);
+
+  node.data = data;
+}
+
+/**
+ * Detect if a value is used to negate something
+ *
+ * @param {Node} node - Node to check.
+ * @return {boolean} - Whether `node` negates.
+ */
+function isNegation(node) {
+  var value;
+
+  value = nlcstToString(node).toLowerCase();
+
+  if (
+    value === 'not' ||
+    value === 'neither' ||
+    value === 'nor' ||
+    /n['’]t/.test(value)
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
+/**
+ * Classify, from a given `polarity` between `-5` and
+ * `5`, if the polarity is `NEGATIVE` (negative),
+ * `NEUTRAL` (0), or `POSITIVE` (positive).
+ *
+ * @param {number} polarity - Polarity to classify.
+ * @return {string} - Classification.
+ */
+function classify(polarity) {
+  if (polarity > 0) {
+    return POSITIVE;
+  }
+
+  return polarity < 0 ? NEGATIVE : NEUTRAL;
+}
