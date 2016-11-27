@@ -1,20 +1,10 @@
-/**
- * @author Titus Wormer
- * @copyright 2014 Titus Wormer
- * @license MIT
- * @module retext:sentiment
- * @fileoverview Test suite for `retext-sentiment`.
- */
-
 'use strict';
 
-/* Dependencies. */
 var test = require('tape');
 var visit = require('unist-util-visit');
 var retext = require('retext');
 var sentiment = require('./');
 
-/* Fixtures. */
 var fixture =
   'Some positive, happy, cats. ' +
   'Darn self-deluded, abandoned, dogs. ' +
@@ -113,7 +103,6 @@ var sentencePolarities = [
   6
 ];
 
-/* Tests. */
 test('sentiment()', function (t) {
   var processor = retext().use(sentiment, inject);
   var tree = processor.parse(fixture);

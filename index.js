@@ -1,44 +1,22 @@
-/**
- * @author Titus Wormer
- * @copyright 2014 Titus Wormer
- * @license MIT
- * @module retext:sentiment
- * @fileoverview Detect the sentiment of text with Retext.
- */
-
 'use strict';
 
-/* Dependencies. */
 var has = require('has');
 var visit = require('unist-util-visit');
 var nlcstToString = require('nlcst-to-string');
 var polarities = require('./index.json');
 
-/* Expose. */
-module.exports = attacher;
+module.exports = sentiment;
 
-/* Constants. */
 var NEUTRAL = 'neutral';
 var POSITIVE = 'positive';
 var NEGATIVE = 'negative';
 
-/**
- * Attacher.
- *
- * @param {Unified} processor - Processor.
- * @param {Object?} [options] - Configuration.
- * @return {Function} - `transformer`.
- */
-function attacher(processor, options) {
+/* Patch `polarity` and `valence` properties on nodes
+ * with a value and word-nodes. Then, patch the same
+ * properties on their parents. */
+function sentiment(processor, options) {
   return transformer;
 
-  /**
-   * Patch `polarity` and `valence` properties on nodes
-   * with a value and word-nodes. Then, patch the same
-   * properties on their parents.
-   *
-   * @param {NLCSTNode} node - Syntax tree.
-   */
   function transformer(node) {
     var concatenate = concatenateFactory();
 
@@ -49,13 +27,8 @@ function attacher(processor, options) {
   }
 }
 
-/**
- * Factory to gather parents and patch them based on their
- * childrens directionality.
- *
- * @return {function(node, index, parent)} - Can be passed
- *   to `visit`.
- */
+/* Factory to gather parents and patch them based on their
+ * childrens directionality. */
 function concatenateFactory() {
   var queue = [];
 
@@ -63,14 +36,7 @@ function concatenateFactory() {
 
   return concatenate;
 
-  /**
-   * Gather a parent if not already gathered.
-   *
-   * @param {NLCSTWordNode} node - Word.
-   * @param {number} index - Position of `node` in
-   *   `parent`.
-   * @param {NLCSTParentNode} parent - Parent of `child`.
-   */
+  /* Gather a parent if not already gathered. */
   function concatenate(node, index, parent) {
     if (
       parent &&
@@ -81,11 +47,7 @@ function concatenateFactory() {
     }
   }
 
-  /**
-   * Patch all words in `parent`.
-   *
-   * @param {NLCSTParentNode} node - Parent
-   */
+  /* Patch all words in `parent`. */
   function one(node) {
     var children = node.children;
     var length = children.length;
@@ -116,9 +78,7 @@ function concatenateFactory() {
     patch(node, polarity);
   }
 
-  /**
-   * Patch all parents.
-   */
+  /* Patch all parents. */
   function done() {
     var length = queue.length;
     var index = -1;
@@ -131,19 +91,11 @@ function concatenateFactory() {
   }
 }
 
-/**
- * Factory to patch based on the bound `config`.
- *
- * @param {Object} config - Node.
- */
+/* Factory to patch based on the bound `config`. */
 function any(config) {
   return setter;
 
-  /**
-   * Patch data-properties on `node`s with a value and words.
-   *
-   * @param {NLCSTNode} node - Node.
-   */
+  /* Patch data-properties on `node`s with a value and words. */
   function setter(node) {
     var value;
     var polarity;
@@ -164,12 +116,7 @@ function any(config) {
   }
 }
 
-/**
- * Patch a `polarity` and valence property on `node`s.
- *
- * @param {NLCSTNode} node - Node.
- * @param {number} polarity - Positiveness or negativness.
- */
+/* Patch a `polarity` and valence property on `node`s. */
 function patch(node, polarity) {
   var data = node.data || {};
 
@@ -179,12 +126,7 @@ function patch(node, polarity) {
   node.data = data;
 }
 
-/**
- * Detect if a value is used to negate something
- *
- * @param {Node} node - Node to check.
- * @return {boolean} - Whether `node` negates.
- */
+/* Detect if a value is used to negate something. */
 function isNegation(node) {
   var value;
 
@@ -202,14 +144,9 @@ function isNegation(node) {
   return false;
 }
 
-/**
- * Classify, from a given `polarity` between `-5` and
+/* Classify, from a given `polarity` between `-5` and
  * `5`, if the polarity is `NEGATIVE` (negative),
- * `NEUTRAL` (0), or `POSITIVE` (positive).
- *
- * @param {number} polarity - Polarity to classify.
- * @return {string} - Classification.
- */
+ * `NEUTRAL` (0), or `POSITIVE` (positive). */
 function classify(polarity) {
   if (polarity > 0) {
     return POSITIVE;
