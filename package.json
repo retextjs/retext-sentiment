@@ -37,16 +37,16 @@
   "devDependencies": {
     "afinn-111": "^1.0.0",
     "browserify": "^13.0.1",
-    "emoji-emotion": "^0.1.1",
-    "emoticon": "^1.0.0",
+    "emoji-emotion": "^1.0.0",
+    "emoticon": "^2.0.0",
     "esmangle": "^1.0.1",
-    "gemoji": "^1.0.0",
-    "nyc": "^8.3.0",
+    "gemoji": "^2.0.1",
+    "nyc": "^10.0.0",
     "remark-cli": "^2.0.0",
     "remark-preset-wooorm": "^1.0.0",
     "retext": "^4.0.0",
     "tape": "^4.0.0",
-    "xo": "^0.16.0"
+    "xo": "^0.17.1"
   },
   "scripts": {
     "build-list": "node script/build-list.js",

@@ -29,11 +29,16 @@ emojiEmotion.forEach(function (info) {
 });
 
 /* Add `emoji-emotion` as gemoji. */
-emojiEmotion.forEach(function (info) {
-  if (info.emoji in emoticons.unicode) {
-    emoticons.unicode[info.emoji].emoticons.forEach(function (emoticon) {
-      list[emoticon] = info.polarity;
-    });
+emoticons.forEach(function (emoticon) {
+  var emoji = emoticon.emoji;
+  var subset = emoticon.emoticons;
+  var length = subset.length;
+  var index = -1;
+
+  if (emoji in list) {
+    while (++index < length) {
+      list[subset[index]] = list[emoji];
+    }
   }
 });
 
