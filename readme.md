@@ -17,11 +17,15 @@ var retext = require('retext');
 var inspect = require('unist-util-inspect');
 var sentiment = require('retext-sentiment');
 
-retext().use(sentiment).use(function () {
-    return function (cst) {
-        console.log(inspect(cst));
-    };
-}).process(
+retext()
+  .use(sentiment)
+  .use(function () {
+    return transformer;
+    function transformer(tree) {
+      console.log(inspect(tree));
+    }
+  })
+  .process(
     'I hate forgetting to bring a book somewhere I ' +
     'definitely should have brought a book to. ' +
     /*
@@ -34,7 +38,7 @@ retext().use(sentiment).use(function () {
      * Emoji.
      */
     'Hai sexy! \ud83d\ude0f'
-);
+  );
 ```
 
 Yields:
