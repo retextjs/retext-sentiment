@@ -35,7 +35,7 @@
     "unist-util-visit": "^1.0.0"
   },
   "devDependencies": {
-    "afinn-111": "^1.0.0",
+    "afinn-165": "^1.0.0",
     "browserify": "^14.0.0",
     "emoji-emotion": "^1.0.0",
     "emoticon": "^3.0.0",
