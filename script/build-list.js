@@ -5,7 +5,7 @@
 /* Dependencies. */
 var fs = require('fs');
 var path = require('path');
-var afinn = require('afinn-111');
+var afinn = require('afinn-165');
 var emojiEmotion = require('emoji-emotion');
 var emoticons = require('emoticon');
 var gemoji = require('gemoji');
