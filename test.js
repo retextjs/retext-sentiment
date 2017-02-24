@@ -108,7 +108,7 @@ test('sentiment()', function (t) {
   var tree = processor.parse(fixture);
   var index = -1;
 
-  processor.run(tree);
+  processor.runSync(tree);
 
   visit(tree, 'WordNode', function (node) {
     var data = node.data || {};

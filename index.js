@@ -14,7 +14,7 @@ var NEGATIVE = 'negative';
 /* Patch `polarity` and `valence` properties on nodes
  * with a value and word-nodes. Then, patch the same
  * properties on their parents. */
-function sentiment(processor, options) {
+function sentiment(options) {
   return transformer;
 
   function transformer(node) {

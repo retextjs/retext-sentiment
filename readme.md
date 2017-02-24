@@ -25,7 +25,7 @@ retext()
       console.log(inspect(tree));
     }
   })
-  .process(
+  .processSync(
     'I hate forgetting to bring a book somewhere I ' +
     'definitely should have brought a book to. ' +
     /*
