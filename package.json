@@ -46,7 +46,7 @@
     "remark-preset-wooorm": "^2.0.0",
     "retext": "^5.0.0",
     "tape": "^4.0.0",
-    "xo": "^0.17.1"
+    "xo": "^0.18.0"
   },
   "scripts": {
     "build-list": "node script/build-list.js",
@@ -67,7 +67,7 @@
   },
   "xo": {
     "space": true,
-    "rules": {},
+    "esnext": false,
     "ignores": [
       "retext-sentiment.js"
     ]
