@@ -100,7 +100,7 @@ var sentencePolarities = [
   3,
   0,
   3,
-  6
+  5
 ];
 
 test('sentiment()', function (t) {
@@ -129,9 +129,9 @@ test('sentiment()', function (t) {
   });
 
   t.equal(tree.children[0].data.valence, 'positive');
-  t.equal(tree.children[0].data.polarity, 13);
+  t.equal(tree.children[0].data.polarity, 12);
   t.equal(tree.data.valence, 'positive');
-  t.equal(tree.data.polarity, 13);
+  t.equal(tree.data.polarity, 12);
 
   t.end();
 });
