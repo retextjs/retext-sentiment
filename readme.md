@@ -12,122 +12,85 @@ npm install retext-sentiment
 
 ## Usage
 
-```javascript
-var retext = require('retext');
-var inspect = require('unist-util-inspect');
-var sentiment = require('retext-sentiment');
-
-retext()
-  .use(sentiment)
-  .use(function () {
-    return transformer;
-    function transformer(tree) {
-      console.log(inspect(tree));
-    }
-  })
-  .processSync(
-    'I hate forgetting to bring a book somewhere I ' +
-    'definitely should have brought a book to. ' +
-    /*
-     * Note that `bad` is a negative word, but that it's
-     * classified as positive due to its preceding `not`
-     * on parent (sentence, paragraph, root) level.
-     */
-    'This product is not bad at all. ' +
-    /*
-     * Emoji.
-     */
-    'Hai sexy! \ud83d\ude0f'
-  );
-```
-
-Yields:
+Say we have the following file, `example.txt`:
 
 ```text
-RootNode[1] [data={"polarity":6,"valence":"positive"}]
-└─ ParagraphNode[5] [data={"polarity":6,"valence":"positive"}]
-   ├─ SentenceNode[32] [data={"polarity":-3,"valence":"negative"}]
-   │  ├─ WordNode[1]
-   │  │  └─ TextNode: 'I'
-   │  ├─ WhiteSpaceNode: ' '
-   │  ├─ WordNode[1] [data={"polarity":-3,"valence":"negative"}]
-   │  │  └─ TextNode: 'hate' [data={"polarity":-3,"valence":"negative"}]
-   │  ├─ WhiteSpaceNode: ' '
-   │  ├─ WordNode[1]
-   │  │  └─ TextNode: 'forgetting'
-   │  ├─ WhiteSpaceNode: ' '
-   │  ├─ WordNode[1]
-   │  │  └─ TextNode: 'to'
-   │  ├─ WhiteSpaceNode: ' '
-   │  ├─ WordNode[1]
-   │  │  └─ TextNode: 'bring'
-   │  ├─ WhiteSpaceNode: ' '
-   │  ├─ WordNode[1]
-   │  │  └─ TextNode: 'a'
-   │  ├─ WhiteSpaceNode: ' '
-   │  ├─ WordNode[1]
-   │  │  └─ TextNode: 'book'
-   │  ├─ WhiteSpaceNode: ' '
-   │  ├─ WordNode[1]
-   │  │  └─ TextNode: 'somewhere'
-   │  ├─ WhiteSpaceNode: ' '
-   │  ├─ WordNode[1]
-   │  │  └─ TextNode: 'I'
-   │  ├─ WhiteSpaceNode: ' '
-   │  ├─ WordNode[1]
-   │  │  └─ TextNode: 'definitely'
-   │  ├─ WhiteSpaceNode: ' '
-   │  ├─ WordNode[1]
-   │  │  └─ TextNode: 'should'
-   │  ├─ WhiteSpaceNode: ' '
-   │  ├─ WordNode[1]
-   │  │  └─ TextNode: 'have'
-   │  ├─ WhiteSpaceNode: ' '
-   │  ├─ WordNode[1]
-   │  │  └─ TextNode: 'brought'
-   │  ├─ WhiteSpaceNode: ' '
-   │  ├─ WordNode[1]
-   │  │  └─ TextNode: 'a'
-   │  ├─ WhiteSpaceNode: ' '
-   │  ├─ WordNode[1]
-   │  │  └─ TextNode: 'book'
-   │  ├─ WhiteSpaceNode: ' '
-   │  ├─ WordNode[1]
-   │  │  └─ TextNode: 'to'
-   │  └─ PunctuationNode: '.'
-   ├─ WhiteSpaceNode: ' '
-   ├─ SentenceNode[14] [data={"polarity":3,"valence":"positive"}]
-   │  ├─ WordNode[1]
-   │  │  └─ TextNode: 'This'
-   │  ├─ WhiteSpaceNode: ' '
-   │  ├─ WordNode[1]
-   │  │  └─ TextNode: 'product'
-   │  ├─ WhiteSpaceNode: ' '
-   │  ├─ WordNode[1]
-   │  │  └─ TextNode: 'is'
-   │  ├─ WhiteSpaceNode: ' '
-   │  ├─ WordNode[1]
-   │  │  └─ TextNode: 'not'
-   │  ├─ WhiteSpaceNode: ' '
-   │  ├─ WordNode[1] [data={"polarity":-3,"valence":"negative"}]
-   │  │  └─ TextNode: 'bad' [data={"polarity":-3,"valence":"negative"}]
-   │  ├─ WhiteSpaceNode: ' '
-   │  ├─ WordNode[1]
-   │  │  └─ TextNode: 'at'
-   │  ├─ WhiteSpaceNode: ' '
-   │  ├─ WordNode[1]
-   │  │  └─ TextNode: 'all'
-   │  └─ PunctuationNode: '.'
-   ├─ WhiteSpaceNode: ' '
-   └─ SentenceNode[6] [data={"polarity":6,"valence":"positive"}]
-      ├─ WordNode[1]
-      │  └─ TextNode: 'Hai'
-      ├─ WhiteSpaceNode: ' '
-      ├─ WordNode[1] [data={"polarity":3,"valence":"positive"}]
-      │  └─ TextNode: 'sexy' [data={"polarity":3,"valence":"positive"}]
-      ├─ PunctuationNode: '!'
-      ├─ WhiteSpaceNode: ' '
-      └─ SymbolNode: '😏' [data={"polarity":3,"valence":"positive"}]
+I hate forgetting to bring a book somewhere I
+definitely should have brought a book to.
+
+This product is not bad at all.
+
+Hai sexy! 😏
+```
+
+You’ll note that `bad` is a negative word, but that it’s actually positive
+as it’s preceded by `not`.
+
+And our script, `example.js`, looks like this:
+
+```javascript
+var vfile = require('to-vfile');
+var report = require('vfile-reporter');
+var inspect = require('unist-util-inspect');
+var unified = require('unified');
+var english = require('retext-english');
+var sentiment = require('retext-sentiment');
+
+var processor = unified()
+  .use(english)
+  .use(sentiment);
+
+var file = vfile.readSync('example.txt');
+var tree = processor.parse(file);
+
+processor.run(tree, file);
+
+console.log(inspect(tree));
+```
+
+Note that we’re not using [`.process()`][process], as that would not give
+access to our tree.
+
+Now, running `node example` yields (abbreviated):
+
+```text
+RootNode[6] (1:1-7:1, 0-135) [data={"polarity":5,"valence":"positive"}]
+├─ ParagraphNode[1] (1:1-2:42, 0-87) [data={"polarity":-3,"valence":"negative"}]
+│  └─ SentenceNode[32] (1:1-2:42, 0-87) [data={"polarity":-3,"valence":"negative"}]
+│     ├─ WordNode[1] (1:1-1:2, 0-1)
+│     │  └─ TextNode: "I" (1:1-1:2, 0-1)
+│     ├─ WhiteSpaceNode: " " (1:2-1:3, 1-2)
+│     ├─ WordNode[1] (1:3-1:7, 2-6) [data={"polarity":-3,"valence":"negative"}]
+│     │  └─ TextNode: "hate" (1:3-1:7, 2-6) [data={"polarity":-3,"valence":"negative"}]
+│     ├─ WhiteSpaceNode: " " (1:7-1:8, 6-7)
+│     ...
+│     └─ PunctuationNode: "." (2:41-2:42, 86-87)
+├─ WhiteSpaceNode: "\n\n" (2:42-4:1, 87-89)
+├─ ParagraphNode[1] (4:1-4:32, 89-120) [data={"polarity":3,"valence":"positive"}]
+│  └─ SentenceNode[14] (4:1-4:32, 89-120) [data={"polarity":3,"valence":"positive"}]
+│     ├─ WordNode[1] (4:1-4:5, 89-93)
+│     │  └─ TextNode: "This" (4:1-4:5, 89-93)
+│     ...
+│     ├─ WordNode[1] (4:17-4:20, 105-108)
+│     │  └─ TextNode: "not" (4:17-4:20, 105-108)
+│     ├─ WhiteSpaceNode: " " (4:20-4:21, 108-109)
+│     ├─ WordNode[1] (4:21-4:24, 109-112) [data={"polarity":-3,"valence":"negative"}]
+│     │  └─ TextNode: "bad" (4:21-4:24, 109-112) [data={"polarity":-3,"valence":"negative"}]
+│     ├─ WhiteSpaceNode: " " (4:24-4:25, 112-113)
+│     ...
+│     └─ PunctuationNode: "." (4:31-4:32, 119-120)
+├─ WhiteSpaceNode: "\n\n" (4:32-6:1, 120-122)
+├─ ParagraphNode[1] (6:1-6:13, 122-134) [data={"polarity":5,"valence":"positive"}]
+│  └─ SentenceNode[6] (6:1-6:13, 122-134) [data={"polarity":5,"valence":"positive"}]
+│     ├─ WordNode[1] (6:1-6:4, 122-125)
+│     │  └─ TextNode: "Hai" (6:1-6:4, 122-125)
+│     ├─ WhiteSpaceNode: " " (6:4-6:5, 125-126)
+│     ├─ WordNode[1] (6:5-6:9, 126-130) [data={"polarity":3,"valence":"positive"}]
+│     │  └─ TextNode: "sexy" (6:5-6:9, 126-130) [data={"polarity":3,"valence":"positive"}]
+│     ├─ PunctuationNode: "!" (6:9-6:10, 130-131)
+│     ├─ WhiteSpaceNode: " " (6:10-6:11, 131-132)
+│     └─ SymbolNode: "😏" (6:11-6:13, 132-134) [data={"polarity":2,"valence":"positive"}]
+└─ WhiteSpaceNode: "\n" (6:13-7:1, 134-135)
 ```
 
 ## API
@@ -189,3 +152,5 @@ and [`wooorm/emoji-emotion`][emoticon] emoji / gemoji.
 [afinn]: https://github.com/wooorm/afinn-165
 
 [emoticon]: https://github.com/wooorm/emoji-emotion
+
+[process]: https://github.com/unifiedjs/unified#processorprocessfilevalue-done
