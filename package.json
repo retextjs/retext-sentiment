@@ -19,11 +19,12 @@
     "guess",
     "retext"
   ],
-  "repository": "https://github.com/wooorm/retext-sentiment",
+  "repository": "wooorm/retext-sentiment",
   "bugs": "https://github.com/wooorm/retext-sentiment/issues",
   "author": "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)",
   "contributors": [
-    "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)"
+    "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)",
+    "Omar Chehab <omarchehab98@users.noreply.github.com>"
   ],
   "files": [
     "index.json",
@@ -49,13 +50,13 @@
     "xo": "^0.18.0"
   },
   "scripts": {
-    "build-list": "node script/build-list.js",
+    "build-list": "node script/build-list",
     "build-md": "remark . -qfo",
     "build-bundle": "browserify index.js --bare -s retextSentiment > retext-sentiment.js",
     "build-mangle": "esmangle retext-sentiment.js > retext-sentiment.min.js",
     "build": "npm run build-list && npm run build-md && npm run build-bundle && npm run build-mangle",
     "lint": "xo",
-    "test-api": "node test.js",
+    "test-api": "node test",
     "test-coverage": "nyc --reporter lcov tape test.js",
     "test": "npm run build && npm run lint && npm run test-coverage"
   },
@@ -73,6 +74,8 @@
     ]
   },
   "remarkConfig": {
-    "plugins": ["preset-wooorm"]
+    "plugins": [
+      "preset-wooorm"
+    ]
   }
 }
