@@ -98,8 +98,8 @@ RootNode[6] (1:1-7:1, 0-135) [data={"polarity":5,"valence":"positive"}]
 ### `retext().use(sentiment[, options])`
 
 **retext-sentiment** automatically detects the sentiment of each
-[`Text`][text] / [`WordNode`][word] (using [`wooorm/afinn-165`][afinn]
-and [`wooorm/emoji-emotion`][emoticon]), and stores the valence in
+[`Text`][text] / [`WordNode`][word] (using [`afinn-165`][afinn]
+and [`emoji-emotion`][emoticon]), and stores the valence in
 `node.data.valence`, and polarity in `node.data.polarity`.
 
 Valence?  Either `"neutral"`, `"positive"`, or `"negative"`.  Polarity?
@@ -120,8 +120,8 @@ in `n't`.
 
 ## Support
 
-**retext-sentiment** supports all [`wooorm/afinn-165`][afinn] words
-and [`wooorm/emoji-emotion`][emoticon] emoji / gemoji.
+**retext-sentiment** supports all [`afinn-165`][afinn] words
+and [`emoji-emotion`][emoticon] emoji / gemoji.
 
 ## License
 
@@ -145,9 +145,9 @@ and [`wooorm/emoji-emotion`][emoticon] emoji / gemoji.
 
 [retext]: https://github.com/wooorm/retext
 
-[text]: https://github.com/wooorm/nlcst#text
+[text]: https://github.com/syntax-tree/nlcst#textnode
 
-[word]: https://github.com/wooorm/nlcst#wordnode
+[word]: https://github.com/syntax-tree/nlcst#word
 
 [afinn]: https://github.com/wooorm/afinn-165
 
