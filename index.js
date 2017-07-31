@@ -1,11 +1,12 @@
 'use strict';
 
-var has = require('has');
 var visit = require('unist-util-visit');
 var nlcstToString = require('nlcst-to-string');
 var polarities = require('./index.json');
 
 module.exports = sentiment;
+
+var own = {}.hasOwnProperty;
 
 var NEUTRAL = 'neutral';
 var POSITIVE = 'positive';
@@ -103,9 +104,9 @@ function any(config) {
     if ('value' in node || node.type === 'WordNode') {
       value = nlcstToString(node);
 
-      if (config && has(config, value)) {
+      if (config && own.call(config, value)) {
         polarity = config[value];
-      } else if (has(polarities, value)) {
+      } else if (own.call(polarities, value)) {
         polarity = polarities[value];
       }
 
