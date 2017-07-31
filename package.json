@@ -49,7 +49,7 @@
     "xo": "^0.18.0"
   },
   "scripts": {
-    "build-list": "node script/build-list",
+    "build-list": "node build",
     "build-md": "remark . -qfo",
     "build-bundle": "browserify index.js --bare -s retextSentiment > retext-sentiment.js",
     "build-mangle": "esmangle retext-sentiment.js > retext-sentiment.min.js",
