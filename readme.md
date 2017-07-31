@@ -97,7 +97,7 @@ RootNode[6] (1:1-7:1, 0-135) [data={"polarity":5,"valence":"positive"}]
 
 ### `retext().use(sentiment[, options])`
 
-**retext-sentiment** automatically detects the sentiment of each
+`retext-sentiment` automatically detects the sentiment of each
 [`Text`][text] / [`WordNode`][word] (using [`afinn-165`][afinn]
 and [`emoji-emotion`][emoticon]), and stores the valence in
 `node.data.valence`, and polarity in `node.data.polarity`.
@@ -112,16 +112,17 @@ so a word such as `bad`, with a polarity of `-3`, is calculated as `3`
 when preceded by a word such as `not`, `neither`, `nor`, or a word ending
 in `n't`.
 
-###### `options`
+###### `options.inject`
 
-*   `inject` (`Object`, optional) — Mapping strings (words, other
-    symbols) to numbers.  Used to insert custom values, or overwrite
-    existing values with new weights.
+Overwrites (`Object`, optional).
+
+Mapping strings (words, other symbols) to numbers.  Used to insert custom
+values, or overwrite existing values with new weights.
 
 ## Support
 
-**retext-sentiment** supports all [`afinn-165`][afinn] words
-and [`emoji-emotion`][emoticon] emoji / gemoji.
+`retext-sentiment` supports all [`afinn-165`][afinn] words and
+[`emoji-emotion`][emoticon] emoji / gemoji.
 
 ## License
 
