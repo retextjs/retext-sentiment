@@ -1,7 +1,7 @@
 language: node_js
 node_js:
 - '4.0'
-- '7.0'
+- '8.0'
 sudo: false
 after_script: bash <(curl -s https://codecov.io/bash)
 deploy:
@@ -11,7 +11,7 @@ deploy:
       secure: QG4chvhPTxVoy0XoS0KZ0sR2CEe5Nj/NStxZPugVgW58AkUuwSTQMegT/0Fi8S7eT0TBukn1mhPz8fa2iXVtmqztqNRBaj901HkZ2+P+gwEB3a/8wfBx+Vhu7l9SMftmWNbNzjRz8iz6sIzObCzKsjoMDwlxpINSsTRPPoy2pv4=
     on:
       tags: true
-      node: '4.0'
+      node: '8.0'
   - provider: releases
     api_key:
       secure: bc3dh6hUDo7H2aOknA3ZA17/lCx7xAC1WLlRM0d+R85E45leMArqEJ6zTqm3QhRWlX3+o7c9+Sbount5pI90SaeMvpNn0hLAXxB6lF64/xskFsEGEaNhEsJJ38YIH8q5mcyK7yTnq267NzTlEcInmNddDc4R/OWnX4yO9ImzvPY=
@@ -20,4 +20,4 @@ deploy:
       - "retext-sentiment.min.js"
     on:
       tags: true
-      node: '7.0'
+      node: '8.0'
