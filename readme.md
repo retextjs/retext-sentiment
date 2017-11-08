@@ -150,8 +150,8 @@ values, or overwrite existing values with new weights.
 
 [word]: https://github.com/syntax-tree/nlcst#word
 
-[afinn]: https://github.com/wooorm/afinn-165
+[afinn]: https://github.com/words/afinn-165
 
-[emoticon]: https://github.com/wooorm/emoji-emotion
+[emoticon]: https://github.com/words/emoji-emotion
 
 [process]: https://github.com/unifiedjs/unified#processorprocessfilevalue-done
