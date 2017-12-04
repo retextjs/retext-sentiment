@@ -130,13 +130,13 @@ values, or overwrite existing values with new weights.
 
 <!-- Definitions -->
 
-[travis-badge]: https://img.shields.io/travis/wooorm/retext-sentiment.svg
+[travis-badge]: https://img.shields.io/travis/retextjs/retext-sentiment.svg
 
-[travis]: https://travis-ci.org/wooorm/retext-sentiment
+[travis]: https://travis-ci.org/retextjs/retext-sentiment
 
-[codecov-badge]: https://img.shields.io/codecov/c/github/wooorm/retext-sentiment.svg
+[codecov-badge]: https://img.shields.io/codecov/c/github/retextjs/retext-sentiment.svg
 
-[codecov]: https://codecov.io/github/wooorm/retext-sentiment
+[codecov]: https://codecov.io/github/retextjs/retext-sentiment
 
 [npm]: https://docs.npmjs.com/cli/install
 
@@ -144,7 +144,7 @@ values, or overwrite existing values with new weights.
 
 [author]: http://wooorm.com
 
-[retext]: https://github.com/wooorm/retext
+[retext]: https://github.com/retextjs/retext
 
 [text]: https://github.com/syntax-tree/nlcst#textnode
 

@@ -19,8 +19,8 @@
     "guess",
     "retext"
   ],
-  "repository": "wooorm/retext-sentiment",
-  "bugs": "https://github.com/wooorm/retext-sentiment/issues",
+  "repository": "retextjs/retext-sentiment",
+  "bugs": "https://github.com/retextjs/retext-sentiment/issues",
   "author": "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)",
   "contributors": [
     "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)",
