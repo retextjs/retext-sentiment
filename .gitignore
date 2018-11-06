@@ -6,3 +6,4 @@ coverage/
 retext-sentiment.js
 retext-sentiment.min.js
 index.json
+yarn.lock
