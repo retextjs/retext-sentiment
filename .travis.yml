@@ -5,21 +5,13 @@ node_js:
 sudo: false
 after_script: bash <(curl -s https://codecov.io/bash)
 deploy:
-  - provider: npm
-    skip_cleanup: true
-    email: tituswormer@gmail.com
-    api_key:
-      secure: QG4chvhPTxVoy0XoS0KZ0sR2CEe5Nj/NStxZPugVgW58AkUuwSTQMegT/0Fi8S7eT0TBukn1mhPz8fa2iXVtmqztqNRBaj901HkZ2+P+gwEB3a/8wfBx+Vhu7l9SMftmWNbNzjRz8iz6sIzObCzKsjoMDwlxpINSsTRPPoy2pv4=
-    on:
-      tags: true
-      node: '9.0'
-  - provider: releases
-    skip_cleanup: true
-    api_key:
-      secure: bc3dh6hUDo7H2aOknA3ZA17/lCx7xAC1WLlRM0d+R85E45leMArqEJ6zTqm3QhRWlX3+o7c9+Sbount5pI90SaeMvpNn0hLAXxB6lF64/xskFsEGEaNhEsJJ38YIH8q5mcyK7yTnq267NzTlEcInmNddDc4R/OWnX4yO9ImzvPY=
-    file:
-      - "retext-sentiment.js"
-      - "retext-sentiment.min.js"
-    on:
-      tags: true
-      node: '9.0'
+  provider: releases
+  skip_cleanup: true
+  api_key:
+    secure: bc3dh6hUDo7H2aOknA3ZA17/lCx7xAC1WLlRM0d+R85E45leMArqEJ6zTqm3QhRWlX3+o7c9+Sbount5pI90SaeMvpNn0hLAXxB6lF64/xskFsEGEaNhEsJJ38YIH8q5mcyK7yTnq267NzTlEcInmNddDc4R/OWnX4yO9ImzvPY=
+  file:
+    - "retext-sentiment.js"
+    - "retext-sentiment.min.js"
+  on:
+    tags: true
+    node: '9.0'
