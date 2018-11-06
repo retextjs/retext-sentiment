@@ -3,7 +3,7 @@
 var test = require('tape');
 var visit = require('unist-util-visit');
 var retext = require('retext');
-var sentiment = require('./');
+var sentiment = require('.');
 
 var fixture =
   'Some positive, happy, cats. ' +
@@ -12,7 +12,7 @@ var fixture =
   'Feels good to be back. ' +
   'Bad news though. ' +
   'This product is not bad at all. ' +
-  'Hai sexy! \ud83d\ude0f';
+  'Hai sexy! \uD83D\uDE0F';
 
 var inject = {
   cats: -3,

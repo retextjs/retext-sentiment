@@ -36,17 +36,17 @@
   },
   "devDependencies": {
     "afinn-165": "^1.0.0",
-    "browserify": "^14.0.0",
+    "browserify": "^16.0.0",
     "emoji-emotion": "^2.0.0",
     "emoticon": "^3.0.0",
     "esmangle": "^1.0.1",
     "gemoji": "^4.0.0",
-    "nyc": "^11.0.0",
-    "remark-cli": "^4.0.0",
-    "remark-preset-wooorm": "^3.0.0",
+    "nyc": "^13.0.0",
+    "remark-cli": "^6.0.0",
+    "remark-preset-wooorm": "^4.0.0",
     "retext": "^5.0.0",
     "tape": "^4.0.0",
-    "xo": "^0.18.0"
+    "xo": "^0.23.0"
   },
   "scripts": {
     "build-list": "node build",
