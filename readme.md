@@ -98,7 +98,7 @@ RootNode[6] (1:1-7:1, 0-135) [data={"polarity":5,"valence":"positive"}]
 ### `retext().use(sentiment[, options])`
 
 `retext-sentiment` automatically detects the sentiment of each
-[`Text`][text] / [`WordNode`][word] (using [`afinn-165`][afinn]
+[`Text`][text] / [`Word`][word] (using [`afinn-165`][afinn]
 and [`emoji-emotion`][emoticon]), and stores the valence in
 `node.data.valence`, and polarity in `node.data.polarity`.
 
@@ -162,7 +162,7 @@ repository, organisation, or community you agree to abide by its terms.
 
 [retext]: https://github.com/retextjs/retext
 
-[text]: https://github.com/syntax-tree/nlcst#textnode
+[text]: https://github.com/syntax-tree/nlcst#text
 
 [word]: https://github.com/syntax-tree/nlcst#word
 
