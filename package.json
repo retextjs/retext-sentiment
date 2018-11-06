@@ -21,9 +21,9 @@
   ],
   "repository": "retextjs/retext-sentiment",
   "bugs": "https://github.com/retextjs/retext-sentiment/issues",
-  "author": "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)",
+  "author": "Titus Wormer <tituswormer@gmail.com> (https://wooorm.com)",
   "contributors": [
-    "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)",
+    "Titus Wormer <tituswormer@gmail.com> (https://wooorm.com)",
     "Omar Chehab <omarchehab98@users.noreply.github.com>"
   ],
   "files": [
