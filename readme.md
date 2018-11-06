@@ -29,23 +29,23 @@ as it’s preceded by `not`.
 And our script, `example.js`, looks like this:
 
 ```javascript
-var vfile = require('to-vfile');
-var report = require('vfile-reporter');
-var inspect = require('unist-util-inspect');
-var unified = require('unified');
-var english = require('retext-english');
-var sentiment = require('retext-sentiment');
+var vfile = require('to-vfile')
+var report = require('vfile-reporter')
+var inspect = require('unist-util-inspect')
+var unified = require('unified')
+var english = require('retext-english')
+var sentiment = require('retext-sentiment')
 
 var processor = unified()
   .use(english)
-  .use(sentiment);
+  .use(sentiment)
 
-var file = vfile.readSync('example.txt');
-var tree = processor.parse(file);
+var file = vfile.readSync('example.txt')
+var tree = processor.parse(file)
 
-processor.run(tree, file);
+processor.run(tree, file)
 
-console.log(inspect(tree));
+console.log(inspect(tree))
 ```
 
 Note that we’re not using [`.process()`][process], as that would not give
