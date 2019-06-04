@@ -1,7 +1,7 @@
 'use strict'
 
 var visit = require('unist-util-visit')
-var nlcstToString = require('nlcst-to-string')
+var toString = require('nlcst-to-string')
 var polarities = require('./index.json')
 
 module.exports = sentiment
@@ -12,8 +12,9 @@ var neutral = 'neutral'
 var positive = 'positive'
 var negative = 'negative'
 
-// Patch `polarity` and `valence` properties on nodes with a value and
-// word-nodes.  Then, patch the same properties on their parents.
+// Patch `polarity` and `valence` properties on nodes with a value and word
+// nodes.
+// Then, patch the same properties on their parents.
 function sentiment(options) {
   return transformer
 
@@ -27,8 +28,7 @@ function sentiment(options) {
   }
 }
 
-// Factory to gather parents and patch them based on their childrens
-// directionality.
+// Factory to gather parents and patch them based on their childrens sentiment.
 function concatenateFactory() {
   var queue = []
 
@@ -50,22 +50,22 @@ function concatenateFactory() {
     var polarity = 0
     var index = -1
     var child
-    var hasNegation
+    var negated = false
 
     while (++index < length) {
       child = children[index]
 
       if (child.data && child.data.polarity) {
-        polarity += (hasNegation ? -1 : 1) * child.data.polarity
+        polarity += (negated ? -1 : 1) * child.data.polarity
       }
 
-      // If the value is a word, remove any present negation.  Otherwise, add
-      // negation if the node contains it.
+      // If the value is a word, remove any present negation.
+      // Otherwise, add negation if the node contains it.
       if (child.type === 'WordNode') {
-        if (hasNegation) {
-          hasNegation = false
-        } else if (isNegation(child)) {
-          hasNegation = true
+        if (negated) {
+          negated = false
+        } else if (negation(child)) {
+          negated = true
         }
       }
     }
@@ -96,7 +96,7 @@ function any(config) {
     var polarity
 
     if ('value' in node || node.type === 'WordNode') {
-      value = nlcstToString(node)
+      value = toString(node)
 
       if (config && own.call(config, value)) {
         polarity = config[value]
@@ -122,29 +122,19 @@ function patch(node, polarity) {
 }
 
 // Detect if a value is used to negate something.
-function isNegation(node) {
-  var value
+function negation(node) {
+  var value = toString(node).toLowerCase()
 
-  value = nlcstToString(node).toLowerCase()
-
-  if (
+  return (
     value === 'not' ||
     value === 'neither' ||
     value === 'nor' ||
     /n['’]t/.test(value)
-  ) {
-    return true
-  }
-
-  return false
+  )
 }
 
 // Classify, from a given `polarity` between `-5` and `5`, if the polarity is
 // negative, neutral, or positive.
 function classify(polarity) {
-  if (polarity > 0) {
-    return positive
-  }
-
-  return polarity < 0 ? negative : neutral
+  return polarity > 0 ? positive : polarity < 0 ? negative : neutral
 }
