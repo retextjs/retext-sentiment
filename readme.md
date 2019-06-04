@@ -1,20 +1,30 @@
-# retext-sentiment [![Build][build-badge]][build] [![Coverage][coverage-badge]][coverage] [![Downloads][downloads-badge]][downloads] [![Chat][chat-badge]][chat]
+# retext-sentiment
 
-Sentiment detection with [**retext**][retext].
+[![Build][build-badge]][build]
+[![Coverage][coverage-badge]][coverage]
+[![Downloads][downloads-badge]][downloads]
+[![Size][size-badge]][size]
+[![Sponsors][sponsors-badge]][collective]
+[![Backers][backers-badge]][collective]
+[![Chat][chat-badge]][chat]
 
-## Installation
+[**retext**][retext] plugin to detect sentiment.
+
+Useful for other plugins as it adds information to [**nlcst**][nlcst] nodes.
+
+## Install
 
 [npm][]:
 
-```bash
+```sh
 npm install retext-sentiment
 ```
 
-## Usage
+## Use
 
 Say we have the following file, `example.txt`:
 
-```text
+```txt
 I hate forgetting to bring a book somewhere I
 definitely should have brought a book to.
 
@@ -26,9 +36,9 @@ Hai sexy! 😏
 You’ll note that `bad` is a negative word, but that it’s actually positive
 as it’s preceded by `not`.
 
-And our script, `example.js`, looks like this:
+…and our script, `example.js`, looks like this:
 
-```javascript
+```js
 var vfile = require('to-vfile')
 var report = require('vfile-reporter')
 var inspect = require('unist-util-inspect')
@@ -53,7 +63,7 @@ access to our tree.
 
 Now, running `node example` yields (abbreviated):
 
-```text
+```txt
 RootNode[6] (1:1-7:1, 0-135) [data={"polarity":5,"valence":"positive"}]
 ├─ ParagraphNode[1] (1:1-2:42, 0-87) [data={"polarity":-3,"valence":"negative"}]
 │  └─ SentenceNode[32] (1:1-2:42, 0-87) [data={"polarity":-3,"valence":"negative"}]
@@ -97,27 +107,28 @@ RootNode[6] (1:1-7:1, 0-135) [data={"polarity":5,"valence":"positive"}]
 
 ### `retext().use(sentiment[, options])`
 
-`retext-sentiment` automatically detects the sentiment of each
-[`Text`][text] / [`Word`][word] (using [`afinn-165`][afinn]
-and [`emoji-emotion`][emoticon]), and stores the valence in
-`node.data.valence`, and polarity in `node.data.polarity`.
+Automatically detects the sentiment of each [**text**][text] and
+[**word**][word] (using [`afinn-165`][afinn] and [`emoji-emotion`][emoticon]),
+and stores the valence in `node.data.valence` and polarity in
+`node.data.polarity`.
 
-Valence?  Either `"neutral"`, `"positive"`, or `"negative"`.  Polarity?
+Valence?
+Either `"neutral"`, `"positive"`, or `"negative"`.
+Polarity?
 A number between `-5` and `5` (both including).
 
-In addition, the plugin exposes a calculated sentiment on parents
-(sentences, paragraphs, and root nodes), through the same `valence`
-and `polarity` properties.  This calculated sentiment includes negation,
-so a word such as `bad`, with a polarity of `-3`, is calculated as `3`
-when preceded by a word such as `not`, `neither`, `nor`, or a word ending
-in `n't`.
+In addition, the plugin reflects a calculated sentiment on parents
+([**sentence**][sentence]s, [**paragraph**][paragraph]s, and [**root**][root]s),
+through the same `valence` and `polarity` properties.
+This calculated sentiment includes negation, so a word such as `bad`, with a
+polarity of `-3`, is calculated as `3` when preceded by a word such as `not`,
+`neither`, `nor`, or a word ending in `n’t`.
 
 ###### `options.inject`
 
-Overwrites (`Object`, optional).
-
-Mapping strings (words, other symbols) to numbers.  Used to insert custom
-values, or overwrite existing values with new weights.
+Mapping strings (words, other symbols) to numbers (`Object.<number>`, optional).
+Used to insert custom values or for overwriting existing values with new
+weights.
 
 ## Support
 
@@ -126,11 +137,13 @@ values, or overwrite existing values with new weights.
 
 ## Contribute
 
-See [`contributing.md` in `retextjs/retext`][contributing] for ways to get
-started.
+See [`contributing.md`][contributing] in [`retextjs/.github`][health] for ways
+to get started.
+See [`support.md`][support] for ways to get help.
 
-This organisation has a [Code of Conduct][coc].  By interacting with this
-repository, organisation, or community you agree to abide by its terms.
+This project has a [Code of Conduct][coc].
+By interacting with this repository, organisation, or community you agree to
+abide by its terms.
 
 ## License
 
@@ -150,11 +163,29 @@ repository, organisation, or community you agree to abide by its terms.
 
 [downloads]: https://www.npmjs.com/package/retext-sentiment
 
+[size-badge]: https://img.shields.io/bundlephobia/minzip/retext-sentiment.svg
+
+[size]: https://bundlephobia.com/result?p=retext-sentiment
+
+[sponsors-badge]: https://opencollective.com/unified/sponsors/badge.svg
+
+[backers-badge]: https://opencollective.com/unified/backers/badge.svg
+
+[collective]: https://opencollective.com/unified
+
 [chat-badge]: https://img.shields.io/badge/join%20the%20community-on%20spectrum-7b16ff.svg
 
 [chat]: https://spectrum.chat/unified/retext
 
 [npm]: https://docs.npmjs.com/cli/install
+
+[health]: https://github.com/retextjs/.github
+
+[contributing]: https://github.com/retextjs/.github/blob/master/contributing.md
+
+[support]: https://github.com/retextjs/.github/blob/master/support.md
+
+[coc]: https://github.com/retextjs/.github/blob/master/code-of-conduct.md
 
 [license]: license
 
@@ -162,16 +193,20 @@ repository, organisation, or community you agree to abide by its terms.
 
 [retext]: https://github.com/retextjs/retext
 
+[nlcst]: https://github.com/syntax-tree/nlcst
+
 [text]: https://github.com/syntax-tree/nlcst#text
 
 [word]: https://github.com/syntax-tree/nlcst#word
+
+[sentence]: https://github.com/syntax-tree/nlcst#sentence
+
+[paragraph]: https://github.com/syntax-tree/nlcst#paragraph
+
+[root]: https://github.com/syntax-tree/nlcst#root
 
 [afinn]: https://github.com/words/afinn-165
 
 [emoticon]: https://github.com/words/emoji-emotion
 
 [process]: https://github.com/unifiedjs/unified#processorprocessfilevalue-done
-
-[contributing]: https://github.com/retextjs/retext/blob/master/contributing.md
-
-[coc]: https://github.com/retextjs/retext/blob/master/code-of-conduct.md
