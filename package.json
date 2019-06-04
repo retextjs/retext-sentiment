@@ -1,9 +1,12 @@
 {
   "name": "retext-sentiment",
   "version": "4.1.1",
-  "description": "Detect the sentiment of text with Retext",
+  "description": "retext plugin to detect the sentiment of text",
   "license": "MIT",
   "keywords": [
+    "unified",
+    "retext",
+    "plugin",
     "natural",
     "language",
     "afinn",
@@ -16,8 +19,7 @@
     "attitude",
     "sentiment",
     "detect",
-    "guess",
-    "retext"
+    "guess"
   ],
   "repository": "retextjs/retext-sentiment",
   "bugs": "https://github.com/retextjs/retext-sentiment/issues",
