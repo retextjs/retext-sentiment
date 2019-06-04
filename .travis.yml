@@ -1,7 +1,7 @@
 language: node_js
 node_js:
-- lts/boron
-- node
+  - lts/dubnium
+  - node
 sudo: false
 after_script: bash <(curl -s https://codecov.io/bash)
 deploy:
@@ -10,7 +10,7 @@ deploy:
   api_key:
     secure: iPDvoiDBfuwbuslARBD8DjPQaq/pfIWnARMxdaX68zcpmcIRZqmLJCXnPPeHwVHcdwYzmA5eJTSwcJFQDijipzn2zD+SL2sLuQp4zMcm2k+Iq1GDLgrDasPrv3rF7W+ytNB+s/5wAsFgX5hsmd8zlaX2+Udhspd5XmAzvK9ENHA=
   file:
-    - "retext-sentiment.js"
-    - "retext-sentiment.min.js"
+    - 'retext-sentiment.js'
+    - 'retext-sentiment.min.js'
   on:
     tags: true
