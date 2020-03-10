@@ -4,7 +4,7 @@ var fs = require('fs')
 var afinn = require('afinn-165')
 var emojiEmotion = require('emoji-emotion')
 var emoticons = require('emoticon')
-var gemoji = require('gemoji')
+var emoji2gemoji = require('gemoji/emoji-to-name')
 
 var list = {}
 
@@ -19,7 +19,7 @@ emojiEmotion.forEach(function(info) {
 })
 
 emojiEmotion.forEach(function(info) {
-  list[':' + gemoji.unicode[info.emoji].name + ':'] = info.polarity
+  list[':' + emoji2gemoji[info.emoji] + ':'] = info.polarity
 })
 
 emoticons.forEach(function(emoticon) {

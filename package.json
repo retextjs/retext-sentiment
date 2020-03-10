@@ -46,7 +46,7 @@
     "browserify": "^16.0.0",
     "emoji-emotion": "^2.0.0",
     "emoticon": "^3.0.0",
-    "gemoji": "^4.0.0",
+    "gemoji": "^5.0.0",
     "nyc": "^15.0.0",
     "prettier": "^1.0.0",
     "remark-cli": "^7.0.0",
