@@ -1,3 +1,5 @@
 coverage/
 retext-sentiment.js
 retext-sentiment.min.js
+*.json
+*.md

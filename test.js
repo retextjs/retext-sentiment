@@ -6,7 +6,7 @@ var u = require('unist-builder')
 var remove = require('unist-util-remove-position')
 var sentiment = require('.')
 
-test('sentiment()', function(t) {
+test('sentiment()', function (t) {
   var processor = retext().use(sentiment, {cats: -3, dogs: 3})
   var tree = processor.runSync(
     processor.parse(
