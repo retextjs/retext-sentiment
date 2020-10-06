@@ -1,6 +1,6 @@
 {
   "name": "retext-sentiment",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "retext plugin to detect the sentiment of text",
   "license": "MIT",
   "keywords": [
