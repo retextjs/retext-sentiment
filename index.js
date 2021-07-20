@@ -1,10 +1,6 @@
-'use strict'
-
-var visit = require('unist-util-visit')
-var toString = require('nlcst-to-string')
-var polarities = require('./index.json')
-
-module.exports = sentiment
+import visit from 'unist-util-visit'
+import toString from 'nlcst-to-string'
+import {list} from './list.js'
 
 var own = {}.hasOwnProperty
 
@@ -15,7 +11,7 @@ var negative = 'negative'
 // Patch `polarity` and `valence` properties on nodes with a value and word
 // nodes.
 // Then, patch the same properties on their parents.
-function sentiment(options) {
+export default function retextSentiment(options) {
   return transformer
 
   function transformer(node) {
@@ -100,8 +96,8 @@ function any(config) {
 
       if (config && own.call(config, value)) {
         polarity = config[value]
-      } else if (own.call(polarities, value)) {
-        polarity = polarities[value]
+      } else if (own.call(list, value)) {
+        polarity = list[value]
       }
 
       if (polarity) {

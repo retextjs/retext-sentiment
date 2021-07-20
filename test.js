@@ -1,10 +1,8 @@
-'use strict'
-
-var test = require('tape')
-var retext = require('retext')
-var u = require('unist-builder')
-var remove = require('unist-util-remove-position')
-var sentiment = require('.')
+import test from 'tape'
+import retext from 'retext'
+import u from 'unist-builder'
+import remove from 'unist-util-remove-position'
+import sentiment from './index.js'
 
 test('sentiment()', function (t) {
   var processor = retext().use(sentiment, {cats: -3, dogs: 3})

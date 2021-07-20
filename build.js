@@ -1,17 +1,15 @@
-'use strict'
-
-var fs = require('fs')
-var afinn = require('afinn-165')
-var emojiEmotion = require('emoji-emotion')
-var emoticons = require('emoticon')
-var emoji2gemoji = require('gemoji/emoji-to-name')
+import fs from 'fs'
+import {afinn165} from 'afinn-165'
+import {emojiEmotion} from 'emoji-emotion'
+import {emoticon} from 'emoticon'
+import {emojiToName} from 'gemoji'
 
 var list = {}
 
-Object.keys(afinn)
+Object.keys(afinn165)
   .sort()
   .forEach(function (key) {
-    list[key] = afinn[key]
+    list[key] = afinn165[key]
   })
 
 emojiEmotion.forEach(function (info) {
@@ -19,12 +17,12 @@ emojiEmotion.forEach(function (info) {
 })
 
 emojiEmotion.forEach(function (info) {
-  list[':' + emoji2gemoji[info.emoji] + ':'] = info.polarity
+  list[':' + emojiToName[info.emoji] + ':'] = info.polarity
 })
 
-emoticons.forEach(function (emoticon) {
-  var emoji = emoticon.emoji
-  var subset = emoticon.emoticons
+emoticon.forEach(function (d) {
+  var emoji = d.emoji
+  var subset = d.emoticons
   var length = subset.length
   var index = -1
 
@@ -35,4 +33,7 @@ emoticons.forEach(function (emoticon) {
   }
 })
 
-fs.writeFileSync('index.json', JSON.stringify(list, null, 2) + '\n')
+fs.writeFileSync(
+  'list.js',
+  'export const list = ' + JSON.stringify(list, null, 2) + '\n'
+)
