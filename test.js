@@ -1,11 +1,11 @@
 import test from 'tape'
-import retext from 'retext'
-import u from 'unist-builder'
-import remove from 'unist-util-remove-position'
-import sentiment from './index.js'
+import {retext} from 'retext'
+import {u} from 'unist-builder'
+import {removePosition} from 'unist-util-remove-position'
+import retextSentiment from './index.js'
 
-test('sentiment()', function (t) {
-  var processor = retext().use(sentiment, {cats: -3, dogs: 3})
+test('retext-sentiment', function (t) {
+  var processor = retext().use(retextSentiment, {cats: -3, dogs: 3})
   var tree = processor.runSync(
     processor.parse(
       'Some positive, happy, cats. ' +
@@ -18,7 +18,7 @@ test('sentiment()', function (t) {
     )
   )
 
-  remove(tree, true)
+  removePosition(tree, true)
 
   t.deepEqual(
     tree,
