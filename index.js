@@ -1,5 +1,5 @@
-import visit from 'unist-util-visit'
-import toString from 'nlcst-to-string'
+import {visit} from 'unist-util-visit'
+import {toString} from 'nlcst-to-string'
 import {list} from './list.js'
 
 var own = {}.hasOwnProperty
