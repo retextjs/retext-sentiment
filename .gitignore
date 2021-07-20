@@ -2,5 +2,4 @@ node_modules/
 coverage/
 .DS_Store
 *.log
-list.js
 yarn.lock

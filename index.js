@@ -1,8 +1,41 @@
-import {visit} from 'unist-util-visit'
+import {afinn165} from 'afinn-165'
+import {emojiEmotion} from 'emoji-emotion'
+import {emoticon} from 'emoticon'
+import {emojiToName} from 'gemoji'
 import {toString} from 'nlcst-to-string'
-import {list} from './list.js'
+import {visit} from 'unist-util-visit'
 
 var own = {}.hasOwnProperty
+
+const map = {}
+let key
+
+for (key in afinn165) {
+  if (own.call(afinn165, key)) {
+    map[key] = afinn165[key]
+  }
+}
+
+let index = -1
+
+while (++index < emojiEmotion.length) {
+  const {emoji, polarity} = emojiEmotion[index]
+  map[emoji] = polarity
+  map[':' + emojiToName[emoji] + ':'] = polarity
+}
+
+index = -1
+
+while (++index < emoticon.length) {
+  const {emoji, emoticons} = emoticon[index]
+  let offset = -1
+
+  if (emoji in map) {
+    while (++offset < emoticons.length) {
+      map[emoticons[offset]] = map[emoji]
+    }
+  }
+}
 
 var neutral = 'neutral'
 var positive = 'positive'
@@ -33,7 +66,7 @@ function concatenateFactory() {
   return concatenate
 
   // Gather a parent if not already gathered.
-  function concatenate(node, index, parent) {
+  function concatenate(_, _1, parent) {
     if (parent && parent.type !== 'WordNode' && queue.indexOf(parent) === -1) {
       queue.push(parent)
     }
@@ -96,8 +129,8 @@ function any(config) {
 
       if (config && own.call(config, value)) {
         polarity = config[value]
-      } else if (own.call(list, value)) {
-        polarity = list[value]
+      } else if (own.call(map, value)) {
+        polarity = map[value]
       }
 
       if (polarity) {
