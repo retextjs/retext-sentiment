@@ -5,7 +5,7 @@ import {emojiToName} from 'gemoji'
 import {toString} from 'nlcst-to-string'
 import {visit} from 'unist-util-visit'
 
-var own = {}.hasOwnProperty
+const own = {}.hasOwnProperty
 
 const map = {}
 let key
@@ -37,133 +37,83 @@ while (++index < emoticon.length) {
   }
 }
 
-var neutral = 'neutral'
-var positive = 'positive'
-var negative = 'negative'
-
 // Patch `polarity` and `valence` properties on nodes with a value and word
 // nodes.
 // Then, patch the same properties on their parents.
-export default function retextSentiment(options) {
-  return transformer
+export default function retextSentiment(options = {}) {
+  return (node) => {
+    const queue = []
 
-  function transformer(node) {
-    var concatenate = concatenateFactory()
+    // Patch data-properties on `node`s with a value and words.
+    visit(node, (node) => {
+      if ('value' in node || node.type === 'WordNode') {
+        const value = toString(node)
+        let polarity
 
-    visit(node, any(options))
-    visit(node, concatenate)
+        if (own.call(options, value)) {
+          polarity = options[value]
+        } else if (own.call(map, value)) {
+          polarity = map[value]
+        }
 
-    concatenate.done()
-  }
-}
-
-// Factory to gather parents and patch them based on their childrens sentiment.
-function concatenateFactory() {
-  var queue = []
-
-  concatenate.done = done
-
-  return concatenate
-
-  // Gather a parent if not already gathered.
-  function concatenate(_, _1, parent) {
-    if (parent && parent.type !== 'WordNode' && queue.indexOf(parent) === -1) {
-      queue.push(parent)
-    }
-  }
-
-  // Patch all words in `parent`.
-  function one(node) {
-    var children = node.children
-    var length = children.length
-    var polarity = 0
-    var index = -1
-    var child
-    var negated = false
-
-    while (++index < length) {
-      child = children[index]
-
-      if (child.data && child.data.polarity) {
-        polarity += (negated ? -1 : 1) * child.data.polarity
-      }
-
-      // If the value is a word, remove any present negation.
-      // Otherwise, add negation if the node contains it.
-      if (child.type === 'WordNode') {
-        if (negated) {
-          negated = false
-        } else if (negation(child)) {
-          negated = true
+        if (polarity !== undefined) {
+          patch(node, polarity)
         }
       }
-    }
+    })
 
-    patch(node, polarity)
-  }
+    // Gather a parent if not already gathered.
+    visit(node, (_, _1, parent) => {
+      if (parent && parent.type !== 'WordNode' && !queue.includes(parent)) {
+        queue.push(parent)
+      }
+    })
 
-  // Patch all parents.
-  function done() {
-    var length = queue.length
-    var index = -1
+    let index = -1
 
     queue.reverse()
 
-    while (++index < length) {
-      one(queue[index])
-    }
-  }
-}
+    while (++index < queue.length) {
+      // Patch all words in `parent`.
+      const node = queue[index]
+      const children = node.children
+      let polarity = 0
+      let offset = -1
+      let negated = false
 
-// Factory to patch based on the bound `config`.
-function any(config) {
-  return setter
+      while (++offset < children.length) {
+        const child = children[offset]
 
-  // Patch data-properties on `node`s with a value and words.
-  function setter(node) {
-    var value
-    var polarity
+        if (child.data && child.data.polarity) {
+          polarity += (negated ? -1 : 1) * child.data.polarity
+        }
 
-    if ('value' in node || node.type === 'WordNode') {
-      value = toString(node)
+        // If the value is a word, remove any present negation.
+        // Otherwise, add negation if the node contains it.
+        if (child.type === 'WordNode') {
+          // Detect if a value is used to negate something.
+          const value = toString(child).toLowerCase()
 
-      if (config && own.call(config, value)) {
-        polarity = config[value]
-      } else if (own.call(map, value)) {
-        polarity = map[value]
+          if (negated) {
+            negated = false
+          } else if (/^(not|neither|nor)$|n['’]t/.test(value)) {
+            negated = true
+          }
+        }
       }
 
-      if (polarity) {
-        patch(node, polarity)
-      }
+      patch(node, polarity)
     }
   }
 }
 
 // Patch a `polarity` and valence property on `node`s.
 function patch(node, polarity) {
-  var data = node.data || {}
+  const data = node.data || (node.data = {})
 
-  data.polarity = polarity || 0
-  data.valence = classify(polarity)
-
-  node.data = data
-}
-
-// Detect if a value is used to negate something.
-function negation(node) {
-  var value = toString(node).toLowerCase()
-
-  return (
-    value === 'not' ||
-    value === 'neither' ||
-    value === 'nor' ||
-    /n['’]t/.test(value)
-  )
-}
-
-// Classify, from a given `polarity` between `-5` and `5`, if the polarity is
-// negative, neutral, or positive.
-function classify(polarity) {
-  return polarity > 0 ? positive : polarity < 0 ? negative : neutral
+  data.polarity = polarity
+  // Classify, from a given `polarity` between `-5` and `5`, if the polarity is
+  // negative, neutral, or positive.
+  data.valence =
+    polarity > 0 ? 'positive' : polarity < 0 ? 'negative' : 'neutral'
 }

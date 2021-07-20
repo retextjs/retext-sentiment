@@ -4,9 +4,9 @@ import {u} from 'unist-builder'
 import {removePosition} from 'unist-util-remove-position'
 import retextSentiment from './index.js'
 
-test('retext-sentiment', function (t) {
-  var processor = retext().use(retextSentiment, {cats: -3, dogs: 3})
-  var tree = processor.runSync(
+test('retext-sentiment', (t) => {
+  const processor = retext().use(retextSentiment, {cats: -3, dogs: 3})
+  const tree = processor.runSync(
     processor.parse(
       'Some positive, happy, cats. ' +
         'Darn self-deluded, abandoned, dogs. ' +

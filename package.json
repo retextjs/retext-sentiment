@@ -59,11 +59,10 @@
     "xo": "^0.39.0"
   },
   "scripts": {
-    "generate": "node build",
     "format": "remark . -qfo && prettier . -w --loglevel warn && xo --fix",
     "test-api": "node --conditions development test.js",
     "test-coverage": "c8 --check-coverage --branches 100 --functions 100 --lines 100 --statements 100 --reporter lcov node --conditions development test.js",
-    "test": "npm run generate && npm run format && npm run test-coverage"
+    "test": "npm run format && npm run test-coverage"
   },
   "prettier": {
     "tabWidth": 2,
@@ -74,13 +73,7 @@
     "trailingComma": "none"
   },
   "xo": {
-    "prettier": true,
-    "rules": {
-      "no-var": "off",
-      "prefer-arrow-callback": "off",
-      "unicorn/prefer-includes": "off",
-      "unicorn/no-array-for-each": "off"
-    }
+    "prettier": true
   },
   "remarkConfig": {
     "plugins": [
