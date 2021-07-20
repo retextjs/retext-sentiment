@@ -1,8 +1,6 @@
-.DS_Store
-*.log
 node_modules/
 coverage/
-retext-sentiment.js
-retext-sentiment.min.js
+.DS_Store
+*.log
 index.json
 yarn.lock
