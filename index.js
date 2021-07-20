@@ -1,3 +1,10 @@
+/**
+ * @typedef {Record<string, number>} Options
+ *   Mapping strings (words, other symbols) to numbers.
+ *   Used to insert custom values or for overwriting existing values with new
+ *   weights.
+ */
+
 import {afinn165} from 'afinn-165'
 import {emojiEmotion} from 'emoji-emotion'
 import {emoticon} from 'emoticon'
@@ -7,7 +14,9 @@ import {visit} from 'unist-util-visit'
 
 const own = {}.hasOwnProperty
 
+/** @type {Record<string, number>} */
 const map = {}
+/** @type {string} */
 let key
 
 for (key in afinn165) {
@@ -21,6 +30,7 @@ let index = -1
 while (++index < emojiEmotion.length) {
   const {emoji, polarity} = emojiEmotion[index]
   map[emoji] = polarity
+  // @ts-expect-error: it’s an index.
   map[':' + emojiToName[emoji] + ':'] = polarity
 }
 
@@ -37,17 +47,28 @@ while (++index < emoticon.length) {
   }
 }
 
-// Patch `polarity` and `valence` properties on nodes with a value and word
-// nodes.
-// Then, patch the same properties on their parents.
+/**
+ * Patch `polarity` and `valence` properties on nodes with a value and word
+ * nodes.
+ * Then, patch the same properties on their parents.
+ *
+ * @type {import('unified').Plugin<[Options?]>}
+ */
 export default function retextSentiment(options = {}) {
+  /**
+   * @typedef {import('unist').Node} Node
+   * @typedef {import('unist').Parent} Parent
+   */
+
   return (node) => {
+    /** @type {Parent[]} */
     const queue = []
 
     // Patch data-properties on `node`s with a value and words.
     visit(node, (node) => {
       if ('value' in node || node.type === 'WordNode') {
         const value = toString(node)
+        /** @type {number|undefined} */
         let polarity
 
         if (own.call(options, value)) {
@@ -84,7 +105,7 @@ export default function retextSentiment(options = {}) {
       while (++offset < children.length) {
         const child = children[offset]
 
-        if (child.data && child.data.polarity) {
+        if (child.data && typeof child.data.polarity === 'number') {
           polarity += (negated ? -1 : 1) * child.data.polarity
         }
 
@@ -105,15 +126,20 @@ export default function retextSentiment(options = {}) {
       patch(node, polarity)
     }
   }
-}
 
-// Patch a `polarity` and valence property on `node`s.
-function patch(node, polarity) {
-  const data = node.data || (node.data = {})
+  /**
+   * Patch a `polarity` and valence property on `node`s.
+   *
+   * @param {Node} node
+   * @param {number} polarity
+   */
+  function patch(node, polarity) {
+    const data = node.data || (node.data = {})
 
-  data.polarity = polarity
-  // Classify, from a given `polarity` between `-5` and `5`, if the polarity is
-  // negative, neutral, or positive.
-  data.valence =
-    polarity > 0 ? 'positive' : polarity < 0 ? 'negative' : 'neutral'
+    data.polarity = polarity
+    // Classify, from a given `polarity` between `-5` and `5`, if the polarity is
+    // negative, neutral, or positive.
+    data.valence =
+      polarity > 0 ? 'positive' : polarity < 0 ? 'negative' : 'neutral'
+  }
 }

@@ -125,7 +125,7 @@ This calculated sentiment includes negation, so a word such as `bad`, with a
 polarity of `-3`, is calculated as `3` when preceded by a word such as `not`,
 `neither`, `nor`, or a word ending in `n’t`.
 
-###### `options.inject`
+###### `options`
 
 Mapping strings (words, other symbols) to numbers (`Object.<number>`, optional).
 Used to insert custom values or for overwriting existing values with new
