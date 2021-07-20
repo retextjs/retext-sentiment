@@ -14,6 +14,9 @@ Useful for other plugins as it adds information to [**nlcst**][nlcst] nodes.
 
 ## Install
 
+This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c):
+Node 12+ is needed to use it and it must be `import`ed instead of `require`d.
+
 [npm][]:
 
 ```sh
@@ -39,21 +42,16 @@ as it’s preceded by `not`.
 …and our script, `example.js`, looks like this:
 
 ```js
-var vfile = require('to-vfile')
-var report = require('vfile-reporter')
-var inspect = require('unist-util-inspect')
-var unified = require('unified')
-var english = require('retext-english')
-var sentiment = require('retext-sentiment')
+import {readSync} from 'to-vfile'
+import {inspect} from 'unist-util-inspect'
+import {unified} from 'unified'
+import retextEnglish from 'retext-english'
+import retextSentiment from 'retext-sentiment'
 
-var processor = unified()
-  .use(english)
-  .use(sentiment)
+const file = readSync('example.txt')
+const processor = unified().use(retextEnglish).use(retextSentiment)
 
-var file = vfile.readSync('example.txt')
-var tree = processor.parse(file)
-
-processor.run(tree, file)
+const tree = processor.runSync(processor.parse(file), file)
 
 console.log(inspect(tree))
 ```
@@ -105,7 +103,10 @@ RootNode[6] (1:1-7:1, 0-135) [data={"polarity":5,"valence":"positive"}]
 
 ## API
 
-### `retext().use(sentiment[, options])`
+This package exports no identifiers.
+The default export is `retextSentiment`.
+
+### `unified().use(retextSentiment[, options])`
 
 Automatically detects the sentiment of each [**text**][text] and
 [**word**][word] (using [`afinn-165`][afinn] and [`emoji-emotion`][emoticon]),
